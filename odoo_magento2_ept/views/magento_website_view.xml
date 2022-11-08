@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_product_pricelist" model="ir.ui.view">
+         <field name="name">view.product.pricelist</field>
+         <field name="model">product.pricelist</field>
+         <field name="arch" type="xml">
+             <tree string="product pricelist">
+                 <field name="name"/>
+                 <field name="discount_policy"/>
+                 <field name="currency_id"/>
+                 <field name="company_id"/>
+             </tree>
+         </field>
+         </record>
+        <record id="view_magento_website_form" model="ir.ui.view">
+            <field name="name">magento.website.form</field>
+            <field name="model">magento.website</field>
+            <field name="arch" type="xml">
+                <form string="Magento Website" create="false" delete="false">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <field name="store_view_ids" invisible="1" />
+                            <button name="open_store_views" type="object" string="Store Views" icon="fa-sitemap" class="oe_stat_button"/>
+                        </div>
+                        <h1>
+                            <field name="name" class="oe_inline" />
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="magento_instance_id" readonly="1" />
+                                <field name="magento_website_id" readonly="1" />
+                                <field name="tax_calculation_method" string="Tax Calculation Method" readonly="1" />
+                                <field name="warehouse_id" readonly="1"/>
+                                <field name="company_id" invisible="1" />
+                                <field name="pricelist_ids" readonly="1" widget="many2many_tags"/>
+                                <field name="cost_pricelist_id" readonly="1"/>
+                                <field name="currency_id" readonly="1" invisible="1" />
+                            </group>
+                            <group>
+                                <div class="o_setting_right_pane">
+                                    <label for="m_website_analytic_account_id"/>
+                                    <div class="text-muted">
+                                        <li>
+                                            The configuration of the analytic account for this
+                                            instance will be applied to all sales orders created by
+                                            the
+                                            connector. With this configuration, the Analytic Default
+                                            Rule configured in Odoo will not apply to Magento2
+                                            orders.
+                                        </li>
+                                        <li>
+                                            If you wish to use Odoo Analytic Default Rule, you will
+                                            not have to configure any anaytic account here.
+                                        </li>
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16">
+                                            <field name="m_website_analytic_account_id"
+                                                   class="o_light_label"
+                                                   options="{'no_create':True,'no_create_edit': True}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="m_website_analytic_tag_ids"/>
+                                    <div class="text-muted">
+                                        <li>
+                                            The configuration of the analytic tags for this instance
+                                            will be applied to all sales orders created by the
+                                            connector. With this configuration, the Analytic Default
+                                            Rule configured in Odoo will not apply to Magento2
+                                            orders.
+                                        </li>
+                                        <li>
+                                            If you wish to use Odoo Analytic Default Rule, you will
+                                            not have to configure any anaytic tags here.
+                                        </li>
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16">
+                                            <field name="m_website_analytic_tag_ids"
+                                                   class="o_light_label" widget="many2many_tags"
+                                                   options="{'no_create':True,'no_create_edit': True}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_magento_website_tree" model="ir.ui.view">
+            <field name="name">magento.website.tree</field>
+            <field name="model">magento.website</field>
+            <field name="arch" type="xml">
+                <tree string="Magento Website" create="false" delete="false">
+                    <field name="name" />
+                    <field name="magento_instance_id" />
+                    <field name="pricelist_id" />
+                    <field name="sort_order" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_magento_websites" model="ir.actions.act_window">
+            <field name="name">Magento Websites</field>
+            <field name="res_model">magento.website</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_magento_website_tree" />
+        </record>
+</odoo>

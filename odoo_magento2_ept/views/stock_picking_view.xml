@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_stock_picking_out_connector_form" model="ir.ui.view">
+            <field name="name">stock.picking.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header/button[5]" position="after">
+                    <field name="is_shipment_exportable" invisible="1"/>
+                    <button name="export_magento_shipment" string="Export Shipment In Magento"
+                            type="object" class="oe_highlight"
+                            attrs="{'invisible' : ['|','|','|','|',
+                            ('magento_instance_id','=',False),
+                            ('state','!=','done'),
+                            ('is_exported_to_magento','=',True),
+                            ('is_shipment_exportable','=',False),
+                            ('max_no_of_attempts','&gt;',3)]}"
+                    />
+                </xpath>
+                <xpath expr="//notebook[last()]" position="inside" attrs="{'invisible' : [('is_magento_picking','=',False)]}">
+                    <page name="magento_info" string="Magento Info">
+                        <group>
+                            <field name="magento_instance_id" readonly="1"/>
+                            <field name="magento_shipping_id"/>
+                            <field name="is_exported_to_magento"/>
+                            <field name="max_no_of_attempts" invisible="1"/>
+                            <field name="magento_message" attrs="{'invisible':[('magento_message', '=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="is_msi_enabled" invisible="1"/>
+                            <field name="magento_inventory_source" string="Magento Inventory Source" attrs="{'invisible' : [('is_msi_enabled','=',False)], 'readonly': [('is_exported_to_magento','=',True)]}"/>
+                        </group>
+                        <div style="color:#000000" attrs="{'invisible': [('is_msi_enabled', '=', False)]}">
+                            <p class="alert alert-warning" role="alert">
+                                <u>
+                                    <h3 style="font-weight:bold;color:#7d5a29">Note :  When MSI is enabled into Magento</h3>
+                                </u>
+                                <b>
+                                    <ol>
+                                        <li>
+                                            Magento Inventory Source is set by default according to the warehouse specified in the website configuration.
+                                        </li>
+                                        <li>
+                                            If you have a re-supply set up in the Odoo warehouse, you can change the Magento Inventory Source manually from here depending on your re-supply rules.
+                                        </li>
+                                        <li>
+                                            This Magento Inventory Source will be set up in order shipment into Magento after exporting shipment information from Odoo to Magento.
+                                        </li>
+                                    </ol>
+                                </b>
+                            </p>
+                        </div>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="magento_view_stock_picking_tree" model="ir.ui.view">
+            <field name="name">magento.view.stock.picking.tree</field>
+            <field name="model">stock.picking</field>
+            <field name="priority" eval="50"/>
+            <field name="arch" type="xml">
+                <tree string="Picking list" create="false">
+                    <field name="name"/>
+                    <field name="location_dest_id"/>
+                    <field name="partner_id"/>
+                    <field name="date"/>
+                    <field name="origin"/>
+                    <field name="backorder_id"/>
+                    <field name="magento_instance_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Inherited Search View Section -->
+        <record id="magento_view_stock_picking_filter_ept" model="ir.ui.view">
+            <field name="name">stock.picking.search</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='status']" position="after">
+                    <filter string="Magento Instances" name="magento_instance_id" domain="[]" context="{'group_by':'magento_instance_id'}" />
+                </xpath>
+            </field>
+        </record>
+
+        <!-- dashboard -->
+        <record id="action_magento_stock_picking_tree_ept" model="ir.actions.act_window">
+            <field name="name">Delivery Orders</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="magento_view_stock_picking_tree"/>
+            <field name="search_view_id" ref="magento_view_stock_picking_filter_ept"/>
+            <field name="domain">[('is_magento_picking','=','True'),('magento_instance_id','!=',False)]</field>
+            <field name="help" type="html">
+                <div>
+                    <br />
+                    <br />
+                    <br />
+                    <p>
+                        <b>There is no any Delivery Order created for any of Magento Sale Orders.</b>
+                        <br/>
+                        <br/>
+                        Delivery order for Magento will be created automatically
+                        and it will be visible over here.<br/>
+                        From here, you can't manually create delivery order for Magento. It
+                        must be created via Sale Order.
+                    </p>
+                </div>
+            </field>
+        </record>
+
+        <record id="action_magento_picking_view_partially_available_ept" model="ir.actions.act_window">
+            <field name="name">Delivery Orders</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('is_magento_picking','=','True'),
+                ('state','=','partially_available'),
+                ('magento_instance_id','=',active_id)]</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search" />
+        </record>
+
+        <record id="action_magento_picking_view_assigned_ept" model="ir.actions.act_window">
+            <field name="name">Delivery Orders</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('is_magento_picking','=','True'),
+                ('state','=','assigned'),
+                ('magento_instance_id','=',active_id)]</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search" />
+        </record>
+
+        <record id="action_magento_picking_view_done_ept" model="ir.actions.act_window">
+            <field name="name">Delivery Orders</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('is_magento_picking','=','True'),
+                ('state','=','done'),
+                ('magento_instance_id','=',active_id)]</field>
+            <field name="search_view_id" ref="stock.view_picking_internal_search" />
+        </record>
+
+<!--        <menuitem id="menu_transfer_details_parent" name="Delivery"-->
+<!--            sequence="4" parent="odoo_magento2_ept.menu_magento_sales_and_customer"/>-->
+
+        <menuitem id="menu_magento_delivery_order_ept" name="Delivery Orders"
+            parent="odoo_magento2_ept.menu_magento_sales_and_customer" sequence="3"
+            action="action_magento_stock_picking_tree_ept" />
+</odoo>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="magento_attribute_group_form_view" model="ir.ui.view">
+            <field name="name">magento.attribute.group.form</field>
+		    <field name="model">magento.attribute.group</field>
+		    <field name="arch" type="xml">
+		        <form string="Magento Attribute Group" create="false" edit="false">
+		        	<sheet>
+                        <group>
+                            <group colspan="4">
+                                <group>
+                                    <field name="name"/>
+                                    <field name="attribute_group_id"/>
+                                </group>
+                                <group>
+                                    <field name="instance_id"/>
+                                    <field name="sort_order"/>
+                                </group>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="attribute_set_id"/>
+                        </group>
+                        <group>
+                            <field name="magento_attribute_ids"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_magento_attribute_group_tree" model="ir.ui.view">
+            <field name="name">magento.attribute.group.tree</field>
+            <field name="model">magento.attribute.group</field>
+            <field name="arch" type="xml">
+                <tree string="Magento Attribute Group" create="false">
+                    <field name="name"/>
+                    <field name="attribute_set_id"  widget="selection"  required="1"/>
+                    <field name="instance_id" />
+                </tree>
+            </field>
+        </record>
+        <record id="magento_attribute_group_search_view" model="ir.ui.view">
+            <field name="name">magento.attribute.group.search.view</field>
+            <field name="model">magento.attribute.group</field>
+            <field name="arch" type="xml">
+                <search string="Magento Attribute Group">
+                    <field name="instance_id" />
+                    <field name="attribute_set_id"/>
+                    <group expand="0" string="Group By">
+                        <filter name = "Instance" string="Magento Instance" context="{'group_by' : 'instance_id'}"/>
+                        <filter name = "Attribute Set" string="Attribute Set" context="{'group_by' : 'attribute_set_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="magento_attribute_group_action_sell_ept" model="ir.actions.act_window">
+                <field name="name">Attribute Group</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">magento.attribute.group</field>
+                <field name="view_mode">tree,form</field>
+                <field name="view_id" ref="view_magento_attribute_group_tree"/>
+                <field name="help" type="html">
+                <p>
+                    You can't create Attribute Group directly from Here.
+                    Please synchronize metadata from settings <i class="fa fa-angle-double-right" /> instance <i class="fa fa-angle-double-right" /> select instance <i class="fa fa-angle-double-right" /> Synchronize Metadata
+                </p>
+            </field>
+        </record>
+
+<!--        <menuitem id="menu_item_magento_attribute_group_ept" name="Attribute Groups"-->
+<!--            parent="odoo_magento2_ept.menu_magento_proucts_parent" sequence="5"-->
+<!--            action="magento_attribute_group_action_sell_ept"/>-->
+</odoo>

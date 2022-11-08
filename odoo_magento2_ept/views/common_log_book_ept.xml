@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <!-- Action of common log book -->
+    <record id="action_common_log_book_ept_magento" model="ir.actions.act_window">
+        <field name="name">Magento Process Job Logs</field>
+        <field name="res_model">common.log.book.ept</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('magento_instance_id','=',active_id)]</field>
+    </record>
+</odoo>

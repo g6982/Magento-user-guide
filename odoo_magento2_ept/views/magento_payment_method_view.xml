@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="payment_method_view_form" model="ir.ui.view">
+        <field name="name">payment_method.view_form</field>
+        <field name="model">magento.payment.method</field>
+        <field name="arch" type="xml">
+            <form string="Payment Methods">
+                <sheet>
+                    <h1>
+                        <field name="payment_method_name" required="0" options="{'no_create':True}"/>
+                    </h1>
+                    <group name="general">
+                        <group name="config">
+                            <field name="payment_method_code" string="Payment Method Code" />
+                        </group>
+                        <group>
+                            <field name="import_rule" />
+                            <field name="days_before_cancel" />
+                        </group>
+                    </group>
+                    <group name="magento">
+                        <group>
+                            <field name="magento_instance_id" required="1" options="{'no_create':True}"/>
+                            <field name="create_invoice_on" string="Create Invoice on Magento"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+     <record id="magento_synced_paymentmethod_data_filter" model="ir.ui.view">
+            <field name="name">magento.synced.paymentmethod.data.filter</field>
+            <field name="model">magento.payment.method</field>
+            <field name="arch" type="xml">
+                <search string="Filter Paymentmethod Wise">
+                    <field name="magento_instance_id"/>
+                    <field name="payment_method_name"/>
+                    <field name="payment_method_code"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Instance" name="group_by_instance" context="{'group_by': 'magento_instance_id'}"/>
+                    </group>
+                </search>
+            </field>
+    </record>
+    <record id="payment_method_view_tree" model="ir.ui.view">
+        <field name="name">payment_method_view_tree</field>
+        <field name="model">magento.payment.method</field>
+        <field name="arch" type="xml">
+            <tree string="Payment Methods" name="payment_method" create="true" delete="false">
+                <field name="magento_instance_id"/>
+                <field name="payment_method_name"/>
+                <field name="payment_method_code"/>
+            </tree>
+        </field>
+    </record>
+    <record id="act_payment_method_form" model="ir.actions.act_window">
+        <field name="name">Payment Gateway </field>
+        <field name="res_model">magento.payment.method</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="act_auto_payment_method_form" model="ir.actions.act_window">
+        <field name="name">Sale Auto Workflow </field>
+        <field name="res_model">sale.workflow.process.ept</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem action="act_payment_method_form" id="menu_action_payment_method_form"
+              parent="odoo_magento2_ept.menu_configuration_root" sequence="4"/>
+    <menuitem action="act_auto_payment_method_form" id="menu_action_auto_payment_method_form"
+              parent="odoo_magento2_ept.menu_configuration_root" sequence="3"/>
+</odoo>

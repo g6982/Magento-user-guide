@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="magento_attribute_set_form_view" model="ir.ui.view">
+            <field name="name">magento.attribute.set.form</field>
+		    <field name="model">magento.attribute.set</field>
+		    <field name="arch" type="xml">
+		        <form string="Magento Attribute Set" create="false" edit="false">
+		        	<sheet>
+                        <group>
+                            <group colspan="4">
+                                <group>
+                                    <field name="attribute_set_name"/>
+                                    <field name="attribute_set_id"/>
+                                </group>
+                                <group>
+                                    <field name="instance_id"/>
+                                    <field name="sort_order"/>
+                                </group>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="attribute_group_ids"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_magento_attribute_set_tree" model="ir.ui.view">
+            <field name="name">magento.attribute.set.tree</field>
+            <field name="model">magento.attribute.set</field>
+            <field name="arch" type="xml">
+                <tree string="Attribute Set" create="false">
+                    <field name="attribute_set_name" string="Attribute Set Name"/>
+                    <field name="instance_id" string="Magento Instance"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="magento_attribute_set_search_view" model="ir.ui.view">
+            <field name="name">magento.attribute.set.search.view</field>
+            <field name="model">magento.attribute.set</field>
+            <field name="arch" type="xml">
+                <search string="Magento product search view">
+                    <field name="instance_id" />
+                    <field name="attribute_set_name" />
+                    <group expand="0" string="Group By">
+                        <filter name = "Instance" string="Magento Instance" context="{'group_by' : 'instance_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="magento_attribute_set_action" model="ir.actions.act_window">
+                <field name="name">Attribute Sets</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">magento.attribute.set</field>
+                <field name="view_mode">tree,form</field>
+                <field name="view_id" ref="view_magento_attribute_set_tree"/>
+                <field name="help" type="html">
+                <p>
+                    You can't create Attribute Set directly from Here.
+                    Please synchronize metadata from settings <i class="fa fa-angle-double-right" /> instance <i class="fa fa-angle-double-right" /> select instance <i class="fa fa-angle-double-right" /> Synchronize Metadata
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_item_magento_attribute_set_ept" name="Attribute Sets"
+            parent="odoo_magento2_ept.menu_magento_proucts_parent" sequence="6"
+            action="magento_attribute_set_action"/>
+</odoo>

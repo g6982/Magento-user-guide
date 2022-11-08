@@ -1,0 +1,225 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="magento_view_order_form" model="ir.ui.view">
+            <field name="name">odoo_magento2_ept.view_order_form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook[last()]" position="inside">
+                    <page name="automation_information" string="Magento Information" attrs="{'invisible' : [('magento_instance_id','=',False)]}">
+                        <group>
+                            <group>
+                                <field name="magento_instance_id" readonly="1"/>
+                                <field name="magento_order_id" string="Magento Order ID" readonly="1"/>
+                                <field name="magento_website_id" readonly="1"/>
+                                <label for='magento_order_reference'/>
+                                <div>
+                                    <field name="magento_order_reference" readonly="1" string="Order Reference"/>
+                                    <button name="open_order_in_magento"
+                                            class="fa fa-external-link btn btn-secondary o_external_button"
+                                            type="object" string=" "/>
+                                </div>
+                                <field name="updated_in_magento" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="store_id" readonly="1"/>
+                                <field name="magento_payment_method_id" readonly="1"/>
+                                <field name="order_transaction_id" readonly="1" attrs="{'invisible' : [('order_transaction_id','=',False)]}"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>        
+
+        <record id="sale_order_view_tree" model="ir.ui.view">
+            <field name="name">sale.order.view.tree</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree" />
+            <field name="arch" type="xml">
+                <field name="state" position="after">
+                    <field name="magento_payment_method_id" /> 
+                </field>
+            </field>
+        </record>
+
+        <record id="sale_order_tree_view_ept" model="ir.ui.view">
+            <field name="name">magento.sale.order.tree.view</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <tree string="Sales Orders" create="false">
+                    <field name="message_unread" invisible="1"/>
+                    <field name="name" string="Order Number"/>
+                    <field name="date_order"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="amount_total" sum="Total Tax Included"/>
+                    <field name="magento_payment_method_id" />
+                    <field name="store_id"/> 
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+         <record id="sale_order_filter_view_ept" model="ir.ui.view">
+             <field name="name">sale.order.filter.view.ept</field>
+             <field name="model">sale.order</field>
+             <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+             <field name="arch" type="xml">
+                <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
+                    <filter string="Fulfilled in Magento" name="magento_order_status_updated" domain="[('updated_in_magento', '=', True)]"/>
+                    <filter string="Not fulfilled in Magento" name="magento_order_status_not_updated" domain="[('updated_in_magento', '!=', True)]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="sale_order_quotation_filter_view_ept" model="ir.ui.view">
+             <field name="name">sale.order.quotation.filter.view.ept</field>
+             <field name="model">sale.order</field>
+             <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+             <field name="arch" type="xml">
+                <xpath expr="//filter[@name='customer']" position="before">
+                    <filter name="Magento Instance" string="Magento Instance" context="{'group_by' : 'magento_instance_id'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- dashboard -->
+        <record id="magento_action_sales_quotations_ept" model="ir.actions.act_window">
+            <field name="name">Quotations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_id" ref="sale_order_tree_view_ept"/>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="domain">[('magento_instance_id','!=',False),
+                ('state','in',('draft','sent','cancel'))]</field>
+            <field name="search_view_id" ref="sale_order_quotation_filter_view_ept"/>
+            <field name="help" type="html">
+                <div>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <p>
+                        <b>There is no any Sale Quotations synchronised from any of your Magento Instance yet.</b>
+                    </p>
+                    <p>
+                        You can't create Sale Quotations manually and push it to Magento. Through
+                        only import Sale Quotations from
+                        any of your Magento Instance, you can see your Quotations here.Import Sale
+                        Quotations can be performed by 2 ways.
+                    </p>
+                    <p>
+                        <b>1.</b>
+                        Via automatic jobs to import Sale Orders at frequent amount of time.
+                        <br/>
+                        Go to menu Configuration
+                        <i class="fa fa-angle-double-right" />
+                        Setting
+                        <i class="fa fa-angle-double-right" />
+                        Magento Instance and click on Cron Scheduler,
+                        Activate cron job of Sale Order Import.
+                        However from Magento settings you can set your preferred timings for auto
+                        import Sale Order from Magento.
+                    </p>
+                    <p>
+                        <b>2.</b>
+                        Manually Import Orders at any time
+                        <br/>
+                        Go to menu Magento
+                        <i class="fa fa-angle-double-right" />
+                        Operation
+                        <i class="fa fa-angle-double-right" />
+                        All Operations and select your
+                        instances and option "Import Sale Order".
+                        Clicking on "Execute" button will import all
+                        orders from Magento to ERP.
+                    </p>
+                    <p>
+                        <b>3.</b>
+                        At the time of import order,you must configure workflow order status.
+                        <br/>
+                        Go to Magento
+                        <i class="fa fa-angle-double-right" />
+                        Configuration
+                        <i class="fa fa-angle-double-right" />
+                        Auto Sale Workflow Configuration
+                    </p>
+                </div>
+            </field>
+        </record>
+
+        <!-- dashboard -->
+        <record id="magento_action_sales_order_ept" model="ir.actions.act_window">
+            <field name="name">Sales Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_id" ref="sale_order_tree_view_ept"/>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="domain">[('magento_instance_id','!=',False),
+                ('state','not in',('draft','sent','cancel'))]</field>
+            <field name="search_view_id" ref="sale_order_filter_view_ept"/>
+            <field name="help" type="html">
+                <div>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <p>
+                        <b>There is no any Sale Order synchronised from any of your Magento Instance yet.</b>
+                    </p>
+                    <p>
+                        You can't create Sale Order manually and push it to Magento. Through
+                        only import Sale Order from
+                        any of your Magento Instance, you can see your Orders here.Import Sale
+                        Order can be performed by 2 ways.
+                    </p>
+                    <p>
+                        <b>1.</b>
+                        Via automatic jobs to import Sale Orders at frequent amount of time.
+                        <br/>
+                        Go to menu Configuration
+                        <i class="fa fa-angle-double-right" />
+                        Setting
+                        <i class="fa fa-angle-double-right" />
+                        Magento Instance and click on Cron Scheduler,
+                        Activate cron job of Sale Order Import.
+                        However from Magento settings you can set your preferred timings for auto
+                        import Sale Order from Magento.
+                    </p>
+                    <p>
+                        <b>2.</b>
+                        Manually Import Orders at any time
+                        <br/>
+                        Go to menu Magento
+                        <i class="fa fa-angle-double-right" />
+                        Operation
+                        <i class="fa fa-angle-double-right" />
+                        All Operations and select your
+                        instances and option "Import Sale Order".
+                        Clicking on "Execute" button will import all
+                        orders from Magento to ERP.
+                    </p>
+                    <p>
+                        <b>3.</b>
+                        At the time of import order,you must configure workflow order status.
+                        <br/>
+                        Go to Magento <i class="fa fa-angle-double-right" />
+                        Configuration <i class="fa fa-angle-double-right" />
+                        Auto Sale Workflow Configuration
+                    </p>
+                </div>
+            </field>
+        </record>
+
+<!--        <menuitem id="menu_item_parent_sale_order" name="Orders"-->
+<!--            parent="odoo_magento2_ept.menu_magento_sales_and_customer" sequence="2"/>-->
+
+        <menuitem id="magento_menu_item_sales_quotations" name="Quotations"
+            parent="odoo_magento2_ept.menu_magento_sales_and_customer"
+            action="magento_action_sales_quotations_ept"
+            sequence="1"/>
+
+        <menuitem id="magento_menu_item_sales_order" name="Orders"
+            parent="odoo_magento2_ept.menu_magento_sales_and_customer"
+            action="magento_action_sales_order_ept"
+            sequence="2"/>
+</odoo>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="magento_export_credit_memo_wizard" model="ir.ui.view">
+        <field name="name">magento.export.credit.memo.wizard</field>
+        <field name="model">magento.export.credit.memo</field>
+        <field name="arch" type="xml">
+            <form string="Export Credit Memo">
+                <group>
+                    <group>
+                        <group>
+                            <field name="refund_type" widget="radio"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="is_return_stock"/>
+                        </group>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Refund Notes">
+                        <group name="magento_refund_notes">
+                            <p colspan="2" class="alert alert-warning" role="alert">
+                                <b>
+                                    <ol>
+                                        <li>
+                                            You need to choose the Online Refund process if the order was paid by (Bank Transfer, Paypal, Credit Card, Wire Transfer, etc.).
+                                        </li>
+                                        <li>
+                                            You need to choose the Offline Refund process if the order was paid by (Check, Money Order, COD, Purchase Order, etc.).
+                                        </li>
+                                        <li>
+                                            Credit notes can only be created at Magento if you have created invoices there first.
+                                        </li>
+                                        <li>
+                                            If you delete an item from the credit note and attempt to add another, Magento will have trouble creating a refund.
+                                        </li>
+                                        <li>
+                                            Magento allows you to create a credit memo only once. In the case of partially refund Magento allows to create multiple credit memo.
+                                        </li>
+                                        <li>
+                                            Order items are mandatory for exporting refunds on Magento.
+                                        </li>
+                                        <li attrs="{'invisible': [('refund_type', '=', 'offline')]}">
+                                            Refund requests will be initiated through the Payment Gateway.
+                                        </li>
+                                        <li attrs="{'invisible': [('is_return_stock', '=', False)]}">
+                                            Magento increases the quantity of the refunded product in its stock.
+                                        </li>
+                                    </ol>
+                                </b>
+                            </p>
+                        </group>
+                    </page>
+                </notebook>
+                <footer>
+                    <button name="export_credit_memo"
+                            type="object"
+                            string="Export Credit Memo"
+                            class="oe_highlight"/>
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="magento_export_credit_memo_wizard_action" model="ir.actions.act_window">
+        <field name="name">Export Credit Memo</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">magento.export.credit.memo</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="magento_export_credit_memo_wizard"/>
+    </record>
+
+</odoo>

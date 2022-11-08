@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="magento_financial_status_onboarding_wizard_view" model="ir.ui.view">
+        <field name="name">magento.financial.status.onboarding.wizard.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority">1002</field>
+        <field name="arch" type="xml">
+            <form string="Financial Status" class="o_magento_ept">
+                <div class="oe_title mb-2 ml-2"
+                     attrs="{'invisible': [('magento_instance_id', '!=', False)]}">
+                    <h1 class="o_on_board_heading">
+                        No Instance Created Yet!
+                    </h1>
+                </div>
+                <div class="oe_title mb-2" attrs="{'invisible': [('magento_instance_id', '=', False)]}">
+                    <h1 class="font-weight-bold o_on_board_heading">
+                        <field name="magento_instance_id" readonly="1" options="{'no_open': True}"/>
+                    </h1>
+                </div>
+                <notebook attrs="{'invisible': [('magento_instance_id', '=', False)]}"
+                          class="o_onboard_notebook">
+                    <page string="Financial Status Configurations" name="financial_status_lines">
+                        <field name="magento_financial_status_ids" class="o_onboard_padding"/>
+                    </page>
+                </notebook>
+                <footer>
+                    <button string="Save Configuration" type="object"
+                            name="magento_save_financial_status_configurations"
+                            class="oe_highlight o_onboard_button"
+                            attrs="{'invisible': [('magento_instance_id', '=', False)]}"/>
+                    <button class="oe_highlight o_onboard_button_white" special="cancel"
+                            string="Cancel"/>
+                </footer>
+                <script>
+                    $(document).ready(function(){
+                    $(".o_field_x2many_list_row_add").hide();
+                    $('div.o_form_view.o_magento_ept').parents('div.modal-content').addClass('on_board_custom_form');
+                    $('div.o_onboard_notebook').find('.o_list_view').addClass('on_board_list_view');
+                    $('div.o_onboard_notebook').find('table').addClass('on_board_table');
+                    });
+                </script>
+            </form>
+        </field>
+    </record>
+</odoo>

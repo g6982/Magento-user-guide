@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_magento_tax_class_tree" model="ir.ui.view">
+            <field name="name">magento.tax.class.tree</field>
+            <field name="model">magento.tax.class</field>
+            <field name="arch" type="xml">
+                <tree string="Magento Tax Class" create="false">
+                    <field name="magento_tax_class_name"/>
+                    <field name="magento_tax_class_type"/>
+                    <field name="magento_instance_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_magento_tax_class_form" model="ir.ui.view">
+            <field name="name">magento.tax.class.form</field>
+            <field name="model">magento.tax.class</field>
+            <field name="arch" type="xml">
+                <form string="Magento Tax Class" create="false" edit="false">
+                    <sheet>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <group colspan="4">
+                                <group>
+                                    <field name="magento_instance_id" readonly="1"/>
+                                    <field name="magento_tax_class_name" attrs="{'readonly': [('active', '=', True)]}"/>
+                                </group>
+                                <group>
+                                    <field name="magento_tax_class_type" attrs="{'readonly': [('active', '=', True)]}"/>
+                                    <field name="magento_tax_class_id" attrs="{'readonly': [('active', '=', True)]}"/>
+                                </group>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="magento_tax_class_search_view" model="ir.ui.view">
+            <field name="name">magento.tax.class.search.view</field>
+            <field name="model">magento.tax.class</field>
+            <field name="arch" type="xml">
+                <search string="Magento Tax Class Search View">
+                    <field name="magento_tax_class_name"/>
+                    <group expand="0" string="Group By">
+                        <filter name = "Instance" string="Magento Instance" context="{'group_by' : 'magento_instance_id'}"/>
+                        <filter name = "Magento Tax Class Type" string="Tax Class Type" context="{'group_by' : 'magento_tax_class_type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="magento_tax_class_action_ept" model="ir.actions.act_window">
+                <field name="name">Tax Class</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">magento.tax.class</field>
+                <field name="view_mode">tree,form</field>
+                <field name="view_id" ref="view_magento_tax_class_tree"/>
+                <field name="help" type="html">
+                <p>
+                    You can't create Magento Product Tax Directrly from Here.
+                    Please sync metadata from settings <i class="fa fa-angle-double-right" /> instance <i class="fa fa-angle-double-right" /> select instance <i class="fa fa-angle-double-right" /> Sync Metadata
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_item_magento_tax_class_ept" name="Tax Class"
+            parent="odoo_magento2_ept.menu_magento_proucts_parent" sequence="7"
+            action="magento_tax_class_action_ept"/>
+</odoo>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form view of sale auto workflow -->
+    <record id="financial_status_process_view_form" model="ir.ui.view">
+        <field name="name">financial_status_form_view</field>
+        <field name="model">magento.financial.status.ept</field>
+        <field eval="16" name="priority"/>
+        <field name="arch" type="xml">
+            <form name="magento_financial_status_form" string="magento_financial_status_process">
+                <group>
+                    <group>
+                        <field name="auto_workflow_id" required="1"/>
+                        <field name="magento_instance_id" required="1"
+                               options="{'no_create':True,'no_create_edit': True}"
+                               domain="[('active','=',True)]"/>
+                        <field name="payment_method_id" required="1"
+                               domain="[('magento_instance_id','=',magento_instance_id)]"/>
+                    </group>
+                    <group>
+                        <field name="financial_status" string="Magento 2 Finance Status" required="1"/>
+                        <field name="payment_term_id" required="1"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!--Tree view of sale auto workflow -->
+    <record id="magento_financial_status_process_view_tree" model="ir.ui.view">
+        <field name="name">financial_status_tree_view</field>
+        <field name="model">magento.financial.status.ept</field>
+        <field eval="16" name="priority"/>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree name="magento_financial_status_tree" editable="top" sample="1">
+                <field name="magento_instance_id" required="1" options="{'no_create':True}"
+                       domain="[('active','=',True)]"/>
+                <field name="payment_method_id" options="{'no_create':True}" required="1"
+                       domain="[('magento_instance_id','=',magento_instance_id)]"/>
+                <field name="payment_term_id" required="1"/>
+                <field name="auto_workflow_id" required="1"/>
+                <field name="financial_status" string="Magento 2 Finance Status" required="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--Search view of payment gateway-->
+    <record id="view_magento_financial_status_ept_search" model="ir.ui.view">
+        <field name="name">magento.financial.status.filter</field>
+        <field name="model">magento.financial.status.ept</field>
+        <field name="arch" type="xml">
+            <search string="Filter Payment Method Wise">
+                <field name="payment_method_id"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active','=',False)]"/>
+                <separator/>
+
+                <group expand="0" string="Group By">
+                    <filter string="Instance" name="group_by_instance"
+                            context="{'group_by': 'magento_instance_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!--Action of sale auto workflow -->
+    <record id="act_magento_financial_status_form" model="ir.actions.act_window">
+        <field name="name">Financial Status</field>
+        <field name="res_model">magento.financial.status.ept</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!--Menu of Financial Status -->
+    <menuitem action="act_magento_financial_status_form" id="menu_action_financial_status_form"
+              parent="odoo_magento2_ept.menu_configuration_root" sequence="5"/>
+
+</odoo>

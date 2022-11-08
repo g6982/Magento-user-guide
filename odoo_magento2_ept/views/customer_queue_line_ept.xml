@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_magento_customer_data_queue_line_ept_form"
+            model="ir.ui.view">
+        <field name="name">magento.customer.data.queue.line.ept.form</field>
+        <field name="model">magento.customer.data.queue.line.ept</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <header>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,done"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" text="Imported"
+                            attrs="{'invisible': [('state','!=','done')]}"/>
+
+                    <group>
+                        <group>
+                            <field name="instance_id"/>
+                            <field name="magento_id"/>
+                        </group>
+                        <group>
+                            <field name="queue_id"/>
+                            <field name="write_date" string="Last Updated On"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="log" string="Log">
+                            <field name="log_lines_ids">
+                                <tree create="false" editable="bottom">
+                                    <field name="message"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="data" string="Customer Data">
+                            <field name="data"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_magento_customer_data_queue_line_ept_tree" model="ir.ui.view">
+        <field name="name">magento.customer.data.queue.line.ept.tree</field>
+        <field name="model">magento.customer.data.queue.line.ept</field>
+        <field name="arch" type="xml">
+            <tree create="0" delete="0">
+                <field name="instance_id"/>
+                <field name="queue_id" string="Queue Reference #"/>
+                <field name="magento_id"/>
+                <field name="processed_at"/>
+                <field name="create_date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

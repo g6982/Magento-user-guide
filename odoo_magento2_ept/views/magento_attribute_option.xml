@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_magento_attribute_option_tree" model="ir.ui.view">
+            <field name="name">magento.attribute.option.tree</field>
+            <field name="model">magento.attribute.option</field>
+            <field name="arch" type="xml">
+                <tree string="Attribute Options" create="false">
+                    <field name="magento_attribute_option_name" string="Attribute Options Name"/>
+                    <field name="magento_attribute_id" string="Magento Attribute ID"/>
+                    <field name="magento_attribute_option_id" string="Magento ID"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_magento_attribute_options_form" model="ir.ui.view">
+            <field name="name">magento.attribute.option.form</field>
+            <field name="model">magento.attribute.option</field>
+            <field name="arch" type="xml">
+                <form string="Magento Attribute Option" create="false" edit="false">
+                    <sheet>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <group colspan="4">
+                                <group>
+                                    <field name="instance_id" readonly="1"/>
+                                    <field name="magento_attribute_option_name" attrs="{'readonly': [('active', '=', True)]}"/>
+                                    <field name="magento_attribute_option_id" attrs="{'readonly': [('active', '=', True)]}"/>
+                                </group>
+                                <group>
+                                    <field name="magento_attribute_id" attrs="{'readonly': [('active', '=', True)]}"/>
+                                    <field name="odoo_attribute_id" attrs="{'readonly': [('active', '=', True)]}"/>
+                                    <field name="odoo_option_id" attrs="{'readonly': [('active', '=', True)]}"/>
+                                </group>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+</odoo>

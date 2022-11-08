@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="magento_basic_configurations_onboarding_wizard_view" model="ir.ui.view">
+        <field name="name">magento.basic.configurations.onboarding.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority">1002</field>
+        <field name="arch" type="xml">
+            <form string="Basic Confirmation" class="o_magento_ept">
+                <div class="oe_title mb-2 ml-2"
+                     attrs="{'invisible': [('magento_instance_id', '!=', False)]}">
+                    <h1 class="o_on_board_heading">
+                        No Instance Created Yet!
+                    </h1>
+                </div>
+                <div class="oe_title mb-2 ml-2"
+                     attrs="{'invisible': [('magento_instance_id', '=', False)]}">
+                    <h1 class="font-weight-bold o_on_board_heading">
+                        <field name="magento_instance_id" readonly="1" options="{'no_open': True}"/>
+                    </h1>
+                </div>
+
+                <div class="o_horizontal_separator font-weight-bold o_onboard_header"
+                     attrs="{'invisible': [('magento_instance_id', '=', False)]}">Product
+                </div>
+                <div name="product_configuration_instance"
+                     class="row mt16 o_settings_container o_onboard_padding"
+                     attrs="{'invisible': [('magento_instance_id', '=', False)]}">
+                    <field name="magento_version" invisible="1"/>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box">
+                        <div class="ml-2 pl-1">
+                            <label for="catalog_price_scope" class="o_onboard_label" string="Catalog price scope"/>
+                            <field name="catalog_price_scope"
+                                   attrs="{'required':[('magento_instance_id','!=',False)]}"
+                                   class="o_light_label w-25" readonly="1"/>
+                            <a href="javascript:void(0)"
+                               title="Scope of Price in Magento" class="mr-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box" attrs="{'invisible': [('catalog_price_scope', '=', 'website')]}">
+                        <div class="ml-2 pl-1">
+                            <label for="pricelist_id" class="o_onboard_label" string="Price list"/>
+                            <field name="pricelist_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"
+                                   attrs="{'required':[('magento_instance_id','!=',False), ('catalog_price_scope', '!=', 'website')]}"
+                                   class="o_light_label w-50 o_onboard_select" widget="selection"
+                            />
+                            <a href="javascript:void(0)"
+                               title="Product price will be taken/set from this pricelist if Catalog Price Scope is global"
+                               class="mr-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box">
+                        <div class="ml-2 pl-1">
+                            <field name="auto_create_product" class="o_onboard_boolean_toggle"
+                                   widget="boolean_toggle"/>
+                            <label for="auto_create_product" class="o_onboard_label"/>
+                            <a href="javascript:void(0)"
+                               title="- This option creates a new product in your Odoo catalog if system couldn't find the product based on SKU/Internal Reference/Default Product Code. &#013; - If you are selling on multiple sales channels and having different SKU / Internal Reference / Default Product Code on each sales channel, it may lead to creation of duplicate products in your product catalogue in your database. &#013; - So we request you to enable this option, as per your product catalogue configuration."
+                               class="mr-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box">
+                        <div class="ml-2 pl-1">
+                            <field name="allow_import_image_of_products"
+                                   class="o_onboard_boolean_toggle" widget="boolean_toggle"/>
+                            <label for="allow_import_image_of_products" class="o_onboard_label" string="Import Products with Images?"/>
+                            <a href="javascript:void(0)"
+                               title="If checked, import product images along with product from Magento while import products."
+                               class="mr-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box">
+                        <div class="ml-2 pl-1">
+                            <label for="import_product_category" class="o_onboard_label" string="Product Category"/>
+                            <field name="import_product_category"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"
+                                   attrs="{'required':[('magento_instance_id','!=',False)]}"
+                                   class="o_light_label w-50 o_onboard_select" widget="selection"
+                            />
+                            <a href="javascript:void(0)"
+                               title="The selected category will set in that product."
+                               class="mr-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_horizontal_separator font-weight-bold o_onboard_header"
+                     attrs="{'invisible': [('magento_instance_id', '=', False)]}">Order
+                </div>
+                <div name="order_configuration_instance"
+                     class="row mt16 o_settings_container o_onboard_padding"
+                     attrs="{'invisible': [('magento_instance_id', '=', False)]}">
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box">
+                        <div class="ml-2 pl-1">
+                            <label for="import_magento_order_status_ids" class="o_onboard_label" string="Magento Import Order Status"/>
+                            <field name="import_magento_order_status_ids"
+                                   widget="many2many_tags"
+                                   attrs="{'required':[('magento_instance_id','!=',False)]}"
+                                   options="{'no_create':True,'no_create_edit': True}"
+                                   class="o_light_label o_onboard_input"/>
+                            <a href="javascript:void(0)"
+                               title="Select order status which you want to import in odoo."
+                               class="mr-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box">
+                        <div class="ml-2 pl-1">
+                            <field name="invoice_done_notify_customer"
+                                   class="o_onboard_boolean_toggle" widget="boolean_toggle"/>
+                            <label for="invoice_done_notify_customer" class="o_onboard_label" string="Notify customer when export invoice?"/>
+                            <a href="javascript:void(0)"
+                               title="If checked,it will send email to the customer while Invoice is created in Magento."
+                               class="mr-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box">
+                        <div class="ml-2 pl-1">
+                            <label for="import_order_after_date" class="o_onboard_label"/>
+                            <field name="import_order_after_date"
+                                   class="o_light_label w-50 o_onboard_input"/>
+                            <a href="javascript:void(0)"
+                               title="Connector only imports those orders which have created after a given date"
+                               class="ml-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box"
+                         groups="analytic.group_analytic_accounting">
+                        <div class="ml-2 pl-1">
+                            <label for="magento_analytic_account_id" class="o_onboard_label"/>
+                            <field name="magento_analytic_account_id" class="o_light_label o_onboard_input"/>
+                            <a href="javascript:void(0)"
+                               title="Set the Analytic account for Magento orders. &#013;- The configuration of the analytic account for this instance will be applied to all sales orders created by the connector. With this configuration, the Analytic Default Rule configured in Odoo will not apply to Magento2 orders. &#013; - If you wish to use Odoo Analytic Default Rule, you will not have to configure any anaytic account here."
+                               class="ml-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box"
+                         groups="analytic.group_analytic_tags">
+                        <div class="ml-2 pl-1">
+                            <label for="magento_analytic_tag_ids" class="o_onboard_label"/>
+                            <field name="magento_analytic_tag_ids" class="o_light_label o_onboard_input"
+                                   widget="many2many_tags"/>
+                            <a href="javascript:void(0)"
+                               title="Set the Analytic account for Magento orders. &#013;- The configuration of the analytic tags for this instance will be applied to all sales orders created by the connector. With this configuration, the Analytic Default Rule configured in Odoo will not apply to Magento2 orders. &#013; - If you wish to use Odoo Analytic Default Rule, you will not have to configure any anaytic tags here."
+                               class="ml-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box">
+                        <div class="ml-2 pl-1">
+                            <field name="is_order_base_currency"
+                                   class="o_onboard_boolean_toggle" widget="boolean_toggle"/>
+                            <label for="is_order_base_currency" class="o_onboard_label" string="Import Order with base currency"/>
+                            <a href="javascript:void(0)"
+                               title="If checked,it will Import Order with base currency."
+                               class="mr-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_horizontal_separator font-weight-bold o_onboard_header"
+                     attrs="{'invisible': [('magento_instance_id', '=', False)]}">Tax
+                </div>
+                <div name="order_configuration_instance"
+                     class="row mt16 o_settings_container o_onboard_padding"
+                     attrs="{'invisible': [('magento_instance_id', '=', False)]}">
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box">
+                        <div class="ml-2 pl-1">
+                            <label for="magento_apply_tax_in_order" class="o_onboard_label"/>
+                            <field name="magento_apply_tax_in_order"
+                                   class="o_light_label w-50 o_onboard_input" attrs="{'required':[('magento_instance_id','!=',False)]}"/>
+                            <a href="javascript:void(0)"
+                               title="1) Odoo Default Tax Behaviour - The Taxes will be set based on Odoo's default functional behaviour i.e. based on Odoo's Tax and Fiscal Position configurations.&#013;2) Create New Tax If Not Found - System will search the tax data received from Magento in Odoo, will create a new one if it fails in finding it."
+                               class="ml-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box">
+                        <div class="ml-2 pl-1">
+                            <label for="magento_tax_rounding_method" class="o_onboard_label"/>
+                            <a href="javascript:void(0)"
+                               title="Note : Magento2 supports Tax Calculation Method Based On – Total, Row Total, or Unit price.
+                               Unit price – this means that Magento will calculate tax on each quantity of each product in the cart, then round those-up and add them together.In Odoo, rounding is only supported per line and rounding globally, it doesn't support rounding based on unit price.Here, set the tax calculation method based on the Magento2 Tax calculation method (Magento2 admin panel > Stores > Settings >Configuration > Sales > Tax > Calculation Settings > Tax Calculation Method Based on)"
+                               class="ml-2 o_doc_link o_onboard_doc_link"/>
+                            <field name="magento_tax_rounding_method"
+                                   class="o_light_label w-50 o_onboard_t" attrs="{'required':[('magento_instance_id','!=',False)]}"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box">
+                        <div class="ml-2 pl-1" attrs="{'invisible': [('magento_apply_tax_in_order', '=', 'odoo_tax')]}">
+                            <label for="magento_credit_tax_account_id" class="o_onboard_label" string="Credit Note Tax Account"/>
+                            <field name="magento_credit_tax_account_id"
+                                   class="o_light_label w-50 o_onboard_input" attrs="{'required':[('magento_apply_tax_in_order','=','create_magento_tax')]}"/>
+                            <a href="javascript:void(0)"
+                               title="Set the credit tax account base on this account we will set this account in the
+                                        newly created tax when import orders from Magento to Odoo."
+                               class="ml-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box">
+                        <div class="ml-2 pl-1" attrs="{'invisible': [('magento_apply_tax_in_order', '=', 'odoo_tax')]}">
+                            <label for="magento_invoice_tax_account_id" class="o_onboard_label" string="Invoice Tax Account"/>
+                            <field name="magento_invoice_tax_account_id"
+                                   class="o_light_label w-50 o_onboard_input" attrs="{'required':[('magento_apply_tax_in_order','=','create_magento_tax')]}"/>
+                            <a href="javascript:void(0)"
+                               title="Set the invoice tax account base on this account we will set
+                                        this account in the newly created tax when import orders
+                                        from Magento to Odoo."
+                               class="ml-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_horizontal_separator font-weight-bold o_onboard_header"
+                     attrs="{'invisible': [('magento_instance_id', '=', False)]}">Inventory
+                </div>
+                <div name="other_configuration_instance"
+                     class="row mt16 o_settings_container o_onboard_padding"
+                     attrs="{'invisible': [('magento_instance_id', '=', False)]}">
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box" attrs="{'invisible': [('magento_version', 'in', ['2.1','2.2'])]}">
+                        <div class="ml-2 pl-1">
+                            <field name="is_multi_warehouse_in_magento"
+                                   class="o_onboard_boolean_toggle" widget="boolean_toggle"/>
+                            <label for="is_multi_warehouse_in_magento" class="o_onboard_label" string="Is Multi Warehouse in Magento?"/>
+                            <a href="javascript:void(0)"
+                               title="If checked, Multi Inventory Sources are used in Magento to keep product stock"
+                               class="mr-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box" attrs="{'invisible': [('is_multi_warehouse_in_magento', '=', True)]}">
+                        <div class="ml-2 pl-1">
+                            <label for="warehouse_ids" class="o_onboard_label" string="Warehouses"/>
+                            <field name="warehouse_ids"
+                                   widget="many2many_tags"
+                                   attrs="{'required':[('magento_instance_id','!=',False), ('is_multi_warehouse_in_magento', '=', False)]}"
+                                   options="{'no_create':True,'no_create_edit': True}"
+                                   class="o_light_label o_onboard_input"/>
+                            <a href="javascript:void(0)"
+                               title="Warehouses used to compute the stock quantities, when only single warehouse is in Magento and perform export product stock operation."
+                               class="mr-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box">
+                        <div class="ml-2 pl-1">
+                            <field name="is_import_product_stock"
+                                   class="o_onboard_boolean_toggle" widget="boolean_toggle"/>
+                            <label for="is_import_product_stock" class="o_onboard_label" string="Import Product stock from Magento?"/>
+                            <a href="javascript:void(0)"
+                               title="If checked, import Product Stock from Magento to Odoo"
+                               class="mr-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                        <div class="ml-2 pl-1 o_setting_box" attrs="{'invisible' : ['|',('is_import_product_stock','=',False),('is_multi_warehouse_in_magento', '=', True)]}">
+                            <label for="import_stock_warehouse" class="o_onboard_label" string="Import Stock Warehouse"/>
+                            <field name="import_stock_warehouse"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"
+                                   attrs="{'required':[('is_import_product_stock','=',True),('is_multi_warehouse_in_magento', '=', False)]}"
+                                   class="o_light_label w-50 o_onboard_select" widget="selection"
+                            />
+                            <a href="javascript:void(0)"
+                               title="Warehouse used to store stock quantities, when only single warehouse is in Magento
+                                and perform import product stock operation."
+                               class="mr-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box" attrs="{'invisible': [('is_multi_warehouse_in_magento', '=', False)]}">
+                        <div class="ml-2 pl-1">
+                            <div class="text-muted" id="sale_coupon">
+                                Set Import and export warehouses of inventory locations.
+                            </div>
+                            <button type="action" name="%(odoo_magento2_ept.action_magento_inventory_locations)d" string="Inventory Locations" icon="fa-arrow-right text-success" class="oe_link"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box">
+                        <div class="ml-2 pl-1">
+                            <label for="magento_stock_field" class="o_onboard_label" string="Magento Stock field"/>
+                            <field name="magento_stock_field"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"
+                                   attrs="{'required':[('magento_instance_id','!=',False)]}"
+                                   class="o_light_label w-50 o_onboard_select" widget="selection"
+                            />
+                            <a href="javascript:void(0)"
+                               title="Select inventory field for Magento products &#013;On Hand Quantity = (Available Quantity + Reserved Quantity) &#013;Forecast Quantity = (Quantity On Hand - Outgoing) + Incoming &#013;Free Quantity = (Quantity On Hand - Reserved Quantity)"
+                               class="mr-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_horizontal_separator font-weight-bold o_onboard_header"
+                     attrs="{'invisible': [('magento_instance_id', '=', False)]}">Digest
+                </div>
+                <div name="digest_configuration_instance"
+                     class="row mt16 o_settings_container o_onboard_padding"
+                     attrs="{'invisible': [('magento_instance_id', '=', False)]}">
+                     <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box">
+                        <div class="ml-2 pl-1">
+                            <field name="is_magento_digest"
+                                   class="o_onboard_boolean_toggle" widget="boolean_toggle"/>
+                            <label for="is_magento_digest" class="o_onboard_label" string="Send Periodic Digest?"/>
+                            <a href="javascript:void(0)"
+                               title="If checked, Then it will send periodic digest per KPI."
+                               class="mr-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_horizontal_separator font-weight-bold o_onboard_header"
+                     attrs="{'invisible': [('magento_instance_id', '=', False)]}">Website
+                </div>
+                <div name="website_configuration_instance"
+                     class="row mt16 o_settings_container o_onboard_padding"
+                     attrs="{'invisible': [('magento_instance_id', '=', False)]}">
+                    <group>
+                        <p colspan="2" class="alert alert-warning" role="alert">
+                            <div style="color:#ff0000; font-size:15px;">
+                                <b>Important Note:</b>
+                            </div>
+                            <div class="d-inline-block w-100">
+                                <div class="row">
+                                    <div class="col-11 p-0">
+                                        <ul>
+                                            <li>
+                                                You can configure only that website which you have selected from website dropdown.
+                                                Other websites you can configure from instance configurations.
+                                            </li>
+                                            <li>
+                                                Magento => Configurations => Settings => Select Instance => Select Website
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </p>
+                    </group>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box">
+                        <div class="ml-2 pl-1 o_setting_box">
+                            <label for="magento_website_id" class="o_onboard_label" string="Select Website"/>
+                            <field name="magento_website_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"
+                                   class="o_light_label w-50 o_onboard_select" widget="selection"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box" attrs="{'invisible': [('magento_website_id', '=', False)]}">
+                        <div class="ml-2 pl-1 o_setting_box">
+                            <label for="magento_website_warehouse_id" class="o_onboard_label" string="Warehouse"/>
+                            <field name="magento_website_warehouse_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"
+                                   class="o_light_label w-50 o_onboard_select" widget="selection"/>
+                            <a href="javascript:void(0)"
+                               title="Warehouse is used when import orders from Magento" class="mr-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box" attrs="{'invisible': [('magento_website_id', '=', False)]}">
+                        <div class="ml-2 pl-1">
+                            <label for="magento_website_pricelist_ids" class="o_onboard_label" string="Pricelist"/>
+                            <field name="magento_website_pricelist_ids"
+                                   widget="many2many_tags"
+                                   attrs="{'required':[('magento_website_id','!=',False)]}"
+                                   options="{'no_create':True,'no_create_edit': True}"
+                                   class="o_light_label o_onboard_input"/>
+                            <a href="javascript:void(0)"
+                               title="Product price will be taken/set from this pricelist if Catalog Price Scope is website."
+                               class="mr-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box" attrs="{'invisible': [('magento_website_id', '=', False)]}">
+                        <div class="ml-2 pl-1">
+                            <label for="tax_calculation_method" class="o_onboard_label" string="Tax Calculation Method"/>
+                            <field name="tax_calculation_method"
+                                   class="o_light_label w-50 o_onboard_select" widget="selection"/>
+                            <a href="javascript:void(0)"
+                               title="This indicates whether product prices received from Magento is including tax or excluding tax, when import sale order from Magento"
+                               class="mr-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box" attrs="{'invisible': [('magento_website_id', '=', False)]}">
+                        <div class="ml-2 pl-1">
+                            <label for="magento_website_cost_pricelist_id" class="o_onboard_label" string="Cost Pricelist"/>
+                            <field name="magento_website_cost_pricelist_id"
+                                   attrs="{'required':[('magento_website_id','!=',False)]}"
+                                   options="{'no_create':True,'no_create_edit': True}"
+                                   class="o_light_label w-50 o_onboard_select" widget="selection"/>
+                            <a href="javascript:void(0)"
+                               title="Product cost price will be taken/set from this pricelist if Catalog Price Scope is website."
+                               class="mr-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_horizontal_separator font-weight-bold o_onboard_header"
+                     attrs="{'invisible': [('magento_website_id', '=', False)]}">Store Views
+                </div>
+                <div name="store_view_configuration_instance"
+                     class="row mt16 o_settings_container o_onboard_padding"
+                     attrs="{'invisible': [('magento_website_id', '=', False)]}">
+                    <group>
+                        <p colspan="2" class="alert alert-warning" role="alert">
+                            <div style="color:#ff0000; font-size:15px;">
+                                <b>Important Note:</b>
+                            </div>
+                            <div class="d-inline-block w-100">
+                                <div class="row">
+                                    <div class="col-11 p-0">
+                                        <ul>
+                                            <li>
+                                                You can configure only that store view which you have selected from store view dropdown.
+                                                Other store views you can configure from instance configurations.
+                                            </li>
+                                            <li>
+                                                Magento => Configurations => Settings => Select Instance => Select Website => Select Store view
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </p>
+                    </group>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box">
+                        <div class="ml-2 pl-1 o_setting_box">
+                            <label for="magento_storeview_id" class="o_onboard_label" string="Select Storeview"/>
+                            <field name="magento_storeview_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"
+                                   class="o_light_label w-50 o_onboard_select" widget="selection"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box" attrs="{'invisible': [('magento_storeview_id', '=', False)]}">
+                        <div class="ml-2 pl-1 o_setting_box">
+                            <label for="magento_team_id" class="o_onboard_label" string="Sales Team"/>
+                            <field name="magento_team_id"
+                                   options="{'no_open':True,'no_create':True,'no_create_edit':True}"
+                                   class="o_light_label w-50 o_onboard_select" widget="selection"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box" attrs="{'invisible': [('magento_storeview_id', '=', False)]}">
+                        <div class="ml-2 pl-1">
+                            <field name="is_use_odoo_order_sequence"
+                                   class="o_onboard_boolean_toggle" widget="boolean_toggle"/>
+                            <label for="is_use_odoo_order_sequence" class="o_onboard_label" string="Use Odoo Default Sequences?"/>
+                            <a href="javascript:void(0)"
+                               title="If checked,it will use odoo order sequences while import order from magento."
+                               class="mr-2 o_doc_link o_onboard_doc_link"/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box o_onboard_setting_box" attrs="{'invisible': ['|',('magento_storeview_id', '=', False),('is_use_odoo_order_sequence','=',True)]}">
+                        <div class="ml-2 pl-1">
+                            <label for="magento_sale_prefix" class="o_onboard_label"/>
+                            <field name="magento_sale_prefix" placeholder="Sale Order Prefix" class="w-50 pull-right"/>
+
+                        </div>
+                    </div>
+                </div>
+                <footer>
+                    <button string="Save Configurations" type="object"
+                            name="magento_save_basic_configurations"
+                            class="oe_highlight o_onboard_button"
+                            attrs="{'invisible': [('magento_instance_id', '=', False)]}"/>
+                    <button class="oe_highlight o_onboard_button_white" special="cancel"
+                            string="Cancel"/>
+                </footer>
+                <script>
+                    $('document').ready(function(){
+                    $('div.o_form_view.o_magento_ept').parents('div.modal-content').addClass('on_board_custom_form')
+                    });
+                </script>
+            </form>
+        </field>
+    </record>
+</odoo>

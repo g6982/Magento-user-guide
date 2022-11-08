@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_magento_inventory_locations_form" model="ir.ui.view">
+            <field name="name">magento.inventory.locations.form</field>
+            <field name="model">magento.inventory.locations</field>
+            <field name="arch" type="xml">
+                <form string="Magento Inventory Locations" create="false" delete="false">
+                    <sheet>
+                        <h1>
+                            <field name="name" class="oe_inline" />
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="magento_location_code" />
+                                <field name="magento_instance_id" readonly="1"/>
+                                <field name="export_stock_warehouse_ids" string="Export Stock Warehouses" widget="many2many_tags"/>
+                            </group>
+                            <group>
+                                <field name="import_stock_warehouse" string="Import Stock Warehouse"/>
+                                <field name="active"/>
+                            </group>
+                            <group>
+                                <field name="ship_from_location"/>
+                            </group>
+                            <div style="color:#000000;width:100%">
+                                <p class="alert alert-warning" role="alert">
+                                    <h3 style="font-weight:bold;color:#7d5a29">Export Shipment location: </h3>
+                                    Map the Odoo Warehouse location to the Magento inventory source location. When Odoo exports shipment information to Magento, the selected warehouse location will be set in the Magento Delivery orders and in the Magento Shipment records.
+                                </p>
+                            </div>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_magento_inventory_locations_tree" model="ir.ui.view">
+            <field name="name">magento.inventory.locations.tree</field>
+            <field name="model">magento.inventory.locations</field>
+            <field name="arch" type="xml">
+                <tree string="Magento Inventory Locations" create="false" delete="false">
+                    <field name="name" />
+                    <field name="magento_instance_id"/>
+                    <field name="magento_location_code" />
+                    <field name="active" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_magento_inventory_locations" model="ir.actions.act_window">
+            <field name="name">Magento Inventory Locations</field>
+            <field name="res_model">magento.inventory.locations</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_magento_inventory_locations_tree" />
+        </record>
+
+        <menuitem id="menu_magento_inventory_locations" name="Magento Inventory Locations"
+            parent="odoo_magento2_ept.menu_configuration_root" sequence="7"
+            action="action_magento_inventory_locations" />
+</odoo>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="magento_product_product_discount" model="product.product">
+            <field name="default_code">MAGENTO DISCOUNT</field>
+            <field name="list_price">0.0</field>
+            <field name="standard_price">0.0</field>
+            <field name="type">service</field>
+            <field name="name">Magento Discount Coupon</field>
+            <field name="invoice_policy">order</field>
+        </record>
+        <record id="product_product_shipping" model="product.product">
+            <field name="default_code">MAGENTO_SHIP</field>
+            <field name="list_price">0.0</field>
+            <field name="standard_price">0.0</field>
+            <field name="type">service</field>
+            <field name="name">Magento Shipping costs</field>
+            <field name="invoice_policy">order</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_ept" model="ir.ui.view">
+            <field name="name">res.partner.form.ept</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='category_id']" position="after">
+                    <field name="company_name"/>
+                </xpath>
+                <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='contact_addresses']/field[@name='child_ids']/form[1]/sheet[1]/group[1]/group[2]/field[@name='mobile']"
+                       position="after">
+                    <field name="company_name"/>
+                </xpath>
+                <page name="internal_notes" position="after">
+                    <page name="magento_customer_information" string="Magento Information">
+                        <field name="magento_res_partner_ids">
+                            <tree create="false" editable="bottom">
+                                <field name="magento_instance_id"/>
+                                <field name="magento_website_id"/>
+                                <field name="magento_customer_id"/>
+                                <field name="address_id"/>
+                            </tree>
+                        </field>
+                    </page>
+                </page>
+            </field>
+        </record>
+
+        <record id="view_magento_partner_tree" model="ir.ui.view">
+            <field name="name">res.partner.tree</field>
+            <field name="model">res.partner</field>
+            <field eval="100" name="priority" />
+            <field name="arch" type="xml">
+                <tree create="false">
+                    <field name="name"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_magento_partner_form" model="ir.actions.act_window">
+            <field name="name">Customers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="domain">[('is_magento_customer','=',True)]</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{"search_default_customer":1}</field>
+            <field name="view_id" ref="view_magento_partner_tree" />
+            <field name="search_view_id" ref="base.view_res_partner_filter" />
+            <field name="help" type="html">
+                <p>You can't create Magento Customer from Here.</p>
+                <br />
+                <p>
+                    <b>When order is imported system will automatically create customer in ERP. </b>
+                    <br />
+                    or
+                    <br />
+                    You can run Import Customer process.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_magento_sales_and_customer" name="Sales"
+            parent="odoo_magento2_ept.menu_magento_root" sequence="2"/>
+
+<!--        <menuitem id="menu_item_parent_customer_ept" name="Customers"-->
+<!--            parent="odoo_magento2_ept.menu_magento_sales_and_customer" sequence="10"/>-->
+
+        <menuitem id="menu_item_customer_ept" name="Customers"
+            parent="odoo_magento2_ept.menu_magento_sales_and_customer" sequence="6"
+            action="action_magento_partner_form" />
+</odoo>

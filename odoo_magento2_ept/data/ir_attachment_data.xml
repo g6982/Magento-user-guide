@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="ir_attachment_magento_net_profit_report_module" model="ir.attachment">
+            <field name="name">magento_net_profit_report_ept.zip</field>
+            <field name="datas" type="base64" file="odoo_magento2_ept/data/magento_net_profit_report_ept.zip"/>
+            <field name="res_model">res.config.settings</field>
+            <field name="public">True</field>
+        </record>
+    </data>
+</odoo>

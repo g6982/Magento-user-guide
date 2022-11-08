@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="magento_dashboard_kanban_view" model="ir.ui.view">
+            <field name="name">Magento Dashboard</field>
+            <field name="model">magento.website</field>
+            <field name="arch" type="xml">
+                <kanban class="oe_background_grey o_kanban_dashboard o_magento_kanban" create="false" sample="1" js_class="MagentoOnBoardingToggle" banner_route="/magento_instances/magento_instances_onboarding_panel">
+                    <field name="name" />
+                    <field name="color"/>
+                    <field name="magento_instance_id" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)} record_dashboard_ept">
+                                <div class="o_kanban_card_header">
+                                    <div class="o_kanban_card_header_title">
+                                        <div class="o_primary mb4">
+                                            <span><img  class="img img-fluid mr4" alt="Magento" style="max-width: 5%;" src="/odoo_magento2_ept/static/src/img/Magentologo.png"/></span>
+                                            <span><t t-esc="record.name.value"/></span>
+                                        </div>
+                                        <div>
+                                            <button name="show_instance" data-toggle="tooltip" data-placement="left" t-att-title="record.magento_instance_id.value" class="btn border magento_instance_name_text_overflow_btn" type="object"
+                                                    style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 30%;border-radius: 5px;">
+                                                <span><t t-esc="record.magento_instance_id.value"/></span>
+                                                <span class="ml-1"><i class="fa fa-caret-right" aria-label="Instance" title="Instance"></i></span>
+                                            </button>
+                                            <button name="show_storeview" class="btn border magento_instance_name_text_overflow_btn" type="object"
+                                            style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;border-radius: 5px;">
+                                                <span>Store Views</span>
+                                                <span class="ml-1"><i class="fa fa-caret-right" aria-label="Storeview" title="Storeview"></i></span>
+                                            </button>
+                                        </div>
+                                        <div class="o_kanban_manage_button_section">
+                                            <a class="o_kanban_manage_toggle_button" href="#">
+                                                <i class="fa fa-ellipsis-v" aria-label="Selection"
+                                                   role="img" title="Selection"/>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <field name="magento_order_data"
+                                               graph_type="line" widget="dashboard_graph_ept"/>
+                                    </div>
+                                    <div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
+                                        <div class="row">
+                                            <div class="col-xs-3 o_kanban_card_manage_section o_kanban_manage_view">
+                                                <div role="menuitem" class="o_kanban_card_manage_title">
+                                                    <span>Products</span>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="magento_product_exported_ept" type="object" title="Exported">Exported</a>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="action_magento_simple_product_type"
+                                                       type="object" title="Simple Products">Simple Products</a>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="action_magento_configurable_product_type"
+                                                       type="object" title="Configurable Products">Configurable Products</a>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-3 o_kanban_card_manage_section o_kanban_manage_view">
+                                                <div role="menuitem" class="o_kanban_card_manage_title">
+                                                    <span>Sales</span>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="magento_action_sales_quotations_ept"
+                                                       type="object" title="Quotations">Quotations</a>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="magento_action_sales_order_ept"
+                                                       type="object" title="Sale Orders">Sale Orders</a>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-3 o_kanban_card_manage_section o_kanban_manage_new">
+                                                <div role="menuitem" class="o_kanban_card_manage_title">
+                                                    <span>Delivery</span>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="magento_waiting_stock_picking_ept"
+                                                       type="object" title="Waiting Availability">Waiting Availability</a>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="magento_partially_available_stock_picking_ept"
+                                                       type="object" title="Waiting Availability">Partially Available</a>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="magento_ready_stock_picking_ept"
+                                                       type="object" title="Ready to Transfer">Ready to Transfer</a>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="magento_transferred_stock_picking_ept"
+                                                       type="object" title="Transferred">Transferred</a>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-3 o_kanban_card_manage_section o_kanban_manage_view">
+                                                <div role="menuitem" class="o_kanban_card_manage_title">
+                                                    <span>Invoices</span>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="magento_invoice_invoices_open" type="object" title="Open">Open</a>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="magento_invoice_invoices_paid" type="object" title="Paid">Paid</a>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-3 o_kanban_card_manage_section o_kanban_manage_view">
+                                                <div role="menuitem" class="o_kanban_card_manage_title">
+                                                    <span>Refunds</span>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="get_draft_refund"
+                                                       type="object"
+                                                       context="{'state': 'draft', 'website': True}"
+                                                       title="Draft">Draft</a>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="get_posted_refund"
+                                                       context="{'state': 'posted', 'website': True}"
+                                                       type="object" title="Posted">Posted</a>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="get_cancelled_refund"
+                                                       type="object"
+                                                       context="{'state': 'cancel', 'website': True}"
+                                                       title="Cancelled">Cancelled</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+    <!--New View for Instance Wise Dashboard-->
+    <record id="magento_dashboard_kanban_view_instance" model="ir.ui.view">
+            <field name="name">Magento Instance</field>
+            <field name="model">magento.instance</field>
+            <field name="arch" type="xml">
+                <kanban class="oe_background_grey o_kanban_dashboard o_magento_kanban" create="false" sample="1" js_class="MagentoOnBoardingToggle" banner_route="/magento_instances/magento_instances_onboarding_panel">
+                    <field name="name" />
+                    <field name="color"/>
+                    <field name="id" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)}" style="width:30%">
+                                <div class="o_kanban_card_header">
+                                    <div class="o_kanban_card_header_title">
+                                        <div class="o_primary">
+                                            <t t-esc="record.name.value"/>
+                                        </div>
+                                        <div class="o_kanban_manage_button_section">
+                                            <a class="o_kanban_manage_toggle_button" href="#">
+                                                <i class="fa fa-ellipsis-v" aria-label="Selection"
+                                                   role="img" title="Selection"/>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <field name="magento_order_data"
+                                               graph_type="line" widget="dashboard_graph_ept"/>
+                                    </div>
+                                    <div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
+                                        <div class="row">
+                                            <div class="col-xs-3 o_kanban_card_manage_section o_kanban_manage_view">
+                                                <div role="menuitem" class="o_kanban_card_manage_title">
+                                                    <span>Products</span>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="magento_product_exported_ept" type="object" title="Exported">Exported</a>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="action_magento_simple_product_type"
+                                                       type="object" title="Simple Products">Simple Products</a>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="action_magento_configurable_product_type"
+                                                       type="object" title="Configurable Products">Configurable Products</a>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-3 o_kanban_card_manage_section o_kanban_manage_view">
+                                                <div role="menuitem" class="o_kanban_card_manage_title">
+                                                    <span>Sales</span>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="magento_action_sales_quotations_ept"
+                                                       type="object" title="Quotations">Quotations</a>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="magento_action_sales_order_ept"
+                                                       type="object" title="Sale Orders">Sale Orders</a>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-3 o_kanban_card_manage_section o_kanban_manage_new">
+                                                <div role="menuitem" class="o_kanban_card_manage_title">
+                                                    <span>Delivery</span>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="magento_waiting_stock_picking_ept"
+                                                       type="object" title="Waiting Availability">Waiting Availability</a>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="magento_partially_available_stock_picking_ept"
+                                                       type="object" title="Waiting Availability">Partially Available</a>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="magento_ready_stock_picking_ept"
+                                                       type="object" title="Ready to Transfer">Ready to Transfer</a>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="magento_transferred_stock_picking_ept"
+                                                       type="object" title="Transferred">Transferred</a>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-3 o_kanban_card_manage_section o_kanban_manage_view">
+                                                <div role="menuitem" class="o_kanban_card_manage_title">
+                                                    <span>Invoices</span>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="magento_invoice_invoices_open" type="object" title="Open">Open</a>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="magento_invoice_invoices_paid" type="object" title="Paid">Paid</a>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-3 o_kanban_card_manage_section o_kanban_manage_view">
+                                                <div role="menuitem" class="o_kanban_card_manage_title">
+                                                    <span>Refunds</span>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="get_draft_refund"
+                                                       type="object"
+                                                       context="{'state': 'draft'}"
+                                                       title="Draft">Draft</a>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="get_posted_refund"
+                                                       context="{'state': 'posted'}"
+                                                       type="object" title="Posted">Posted</a>
+                                                </div>
+                                                <div role="menuitem">
+                                                    <a name="get_cancelled_refund"
+                                                       type="object"
+                                                       context="{'state': 'cancel'}"
+                                                       title="Cancelled">Cancelled</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <record id="action_magento_dashboard_instance" model="ir.actions.act_window">
+            <field name="name">Magento Instance</field>
+            <field name="res_model">magento.instance</field>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="magento_dashboard_kanban_view_instance" />
+            <field name="help" type="html">
+                <p class="o_view_nocontent_neutral_face">Magento Dashboard</p>
+                <p>
+                    Your Magento dashboard is empty. Create <i>Magento Instance</i> first, then Magento dashboard will create automatically.
+                    <a type="action" name="%(odoo_magento2_ept.action_magento_config_settings)d" tabindex="-1">Create Magento Instance.</a>
+                </p>
+            </field>
+        </record>
+        <record id="action_magento_dashboard_website" model="ir.actions.act_window">
+            <field name="name">Magento Website</field>
+            <field name="res_model">magento.website</field>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="magento_dashboard_kanban_view" />
+            <field name="help" type="html">
+                <p class="o_view_nocontent_neutral_face">Magento Dashboard</p>
+                <p>
+                    Your Magento dashboard is empty. Create <i>Magento Instance</i> first, then Magento dashboard will create automatically.
+                    <a type="action" name="%(odoo_magento2_ept.action_magento_config_settings)d" tabindex="-1">Create Magento Instance.</a>
+                </p>
+            </field>
+        </record>
+
+        <record id="decide_main_action" model="ir.actions.server">
+        <field name="name">Dashboard Main Action</field>
+        <field name="model_id" ref="model_magento_instance"/>
+        <field name="state">code</field>
+        <field name="code">action = env.get('magento.instance').check_dashboard_view()</field>
+    </record>
+    <menuitem id="menu_main_magento_dashboard_ept" name="Dashboard"
+        parent="odoo_magento2_ept.menu_magento_root" sequence="1"
+        action="decide_main_action" />
+
+</odoo>

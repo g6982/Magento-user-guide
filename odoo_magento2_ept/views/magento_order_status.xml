@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form view of sale auto workflow -->
+    <record id="order_status_process_view_form" model="ir.ui.view">
+        <field name="name">order_status_form_view</field>
+        <field name="model">magento.order.status.ept</field>
+        <field eval="16" name="priority"/>
+        <field name="arch" type="xml">
+            <form name="magento_order_status_form" string="magento_order_status_process">
+                <group>
+                    <group>
+                        <field name="magento_instance_id" required="1"/>
+                        <field name="m_order_status" required="1"/>
+                        <field name="m_order_status_code" required="1"/>
+                        <field name="main_status" required="1"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!--Tree view of sale auto workflow -->
+    <record id="magento_order_status_process_view_tree" model="ir.ui.view">
+        <field name="name">order_status_tree_view</field>
+        <field name="model">magento.order.status.ept</field>
+        <field eval="16" name="priority"/>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree name="magento_order_status_tree" editable="top" sample="1" create="0">
+                <field name="magento_instance_id" readonly="1" options="{'no_create':True}"
+                       domain="[('active','=',True)]"/>
+                <field name="m_order_status"  readonly="1" string="Order Status Name"/>
+                <field name="m_order_status_code" readonly="1" string="Order Status Code"/>
+                <field name="main_status" string="Mapped Order Status"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--Search view of payment gateway-->
+    <record id="view_magento_order_status_ept_search" model="ir.ui.view">
+        <field name="name">magento.order.status.filter</field>
+        <field name="model">magento.order.status.ept</field>
+        <field name="arch" type="xml">
+            <search string="Filter Order Status Wise">
+                <field name="m_order_status"/>
+               <!--  <separator/>
+                <filter name="archived" string="Archived" domain="[('active','=',False)]"/>
+                <separator/> -->
+                <group expand="0" string="Group By">
+                    <filter string="Instance" name="group_by_instance"
+                            context="{'group_by': 'magento_instance_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="act_magento_order_status_form" model="ir.actions.act_window">
+        <field name="name">Map Order Status</field>
+        <field name="res_model">magento.order.status.ept</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!--Menu of Magneto Orderstatus Status -->
+    <menuitem action="act_magento_order_status_form" id="menu_action_order_status_form"
+              parent="odoo_magento2_ept.menu_configuration_root" sequence="6"/>
+
+</odoo>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="attribute_attribute_form_action" model="ir.actions.act_window">
+            <field name="name">Product Attribute</field>
+            <field name="res_model">magento.product.attribute</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_user_id":uid,"force_model": 'product.product'}</field>
+            <field name="help"></field>
+        </record>
+        
+        <!-- Magento attribute  -->
+		<record id="magento_product_attribute_tree_view" model="ir.ui.view">
+		    <field name="model">magento.product.attribute</field>
+		    <field name="arch" type="xml">
+		        <tree string="Attribute" create="false">
+		            <field name="odoo_attribute_id"/>
+		            <field name="magento_attribute_code"/>
+		            <field name="instance_id"/>
+		        </tree>
+		    </field>
+		</record>
+		
+		<record id="magento_product_attribute_form_view" model="ir.ui.view">
+		    <field name="model">magento.product.attribute</field>
+		    <field name="arch" type="xml">
+		        <form string="Magento Product Attribute" create="false" edit="false">
+		        	<sheet>
+		        		<div class="oe_button_box" name="button_box">
+		        			<button class="oe_stat_button"
+                            icon="fa-bars" name="open_attribute_value" type="object" string="Attribute Values"/>                            
+		        		</div>
+		        		<div class="oe_title">
+                       		<h1>
+                            	<field name="frontend_label"/>
+                        	</h1>
+                    	</div>
+		            <group name="main" string="Main Fields" col="4">              
+		                <field name="magento_attribute_code"
+		                       attributes="{'readonly': [('magento_attribute_id', '!=', False)]}"/>
+		                <field name="instance_id" string="Instance" options="{'no_create':True}" />
+						 <field name="attribute_type" string="Attribute Type"/>
+		                <field name="scope"/>
+		                <field name="odoo_attribute_id"/>
+		            </group>
+		            <group name="other" string="Other fields" col="4">
+		            	<field name="default_value"/>
+		                <field name="group_id"/>
+		                <field name="position"/>
+		                <field name="note"/>
+		            </group>
+		            <separator/>
+		            <group string="Boolean Fields" name="boolean"  col="6">
+		                <span colspan="2"/>
+		            </group>
+		            <group name="system" string="System Info." col="2">
+		                <field name="magento_attribute_id" readonly="1"/>
+		            </group>
+		            </sheet>
+		        </form>
+		    </field>
+		</record>
+				
+	<record id="magento_product_attribute_search_view" model="ir.ui.view">
+     	<field name="name">magento.product.product.search.view</field>
+     	<field name="model">magento.product.attribute</field>
+     	<field name="arch" type="xml">
+     		<search string="Magento product search view">
+     			<field name="frontend_label" />
+     			<field name="magento_attribute_code"/>
+     			<group expand="0" string="Group By">
+     				<filter name = "Magento Instance" string="Magento Instance" context="{'group_by' : 'instance_id'}"/>
+     				<filter name = "Name" string="Name" context="{'group_by' : 'frontend_label'}"/>
+     				<filter name = "Attribute" string="Attribute" context="{'group_by' : 'odoo_attribute_id'}"/>
+     			</group>
+     		</search>
+     	</field>
+     </record> 
+		<record id="magento_product_attribute_action" model="ir.actions.act_window">
+		    <field name="type">ir.actions.act_window</field>
+		    <field name="res_model">magento.product.attribute</field>
+		    <field name="name">Magento attributes</field>
+		    <field name="view_id" ref="magento_product_attribute_tree_view"/>
+		   <field name="search_view_id" ref="magento_product_attribute_search_view"/> 
+		    <field name="help" type="html">
+		      <p class="oe_view_nocontent_create">
+		        	You can't create Attribute directly from Here.
+				  Please synchronize metadata from settings <i class="fa fa-angle-double-right" /> instance <i class="fa fa-angle-double-right" /> select instance => Synchronize Metadata
+		      </p>
+		    </field>
+		</record>
+		
+		<menuitem id="menu_magento_product_attribute"
+		          name="Product Attributes"
+		          action="magento_product_attribute_action"
+		          parent="odoo_magento2_ept.menu_magento_proucts_parent"
+		          sequence="4"/>
+           
+    </data>
+</odoo>

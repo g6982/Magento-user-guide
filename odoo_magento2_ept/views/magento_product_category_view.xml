@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_magento_product_category_tree" model="ir.ui.view">
+            <field name="name">magento.product.category.tree</field>
+            <field name="model">magento.product.category</field>
+            <field name="arch" type="xml">
+                <tree string="Magento Product Category" create="false">
+                    <field name="complete_category_name"/>
+                    <field name="instance_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_magento_product_category_form" model="ir.ui.view">
+            <field name="name">magento.product.category.form</field>
+            <field name="model">magento.product.category</field>
+            <field name="arch" type="xml">
+                <form string="Magento Product Category" create="false" edit="false">
+                    <sheet>
+                        <group>
+                            <group colspan="4">
+                                <group>
+                                    <field name="instance_id" readonly="1"/>
+                                    <field name="category_id"/>
+                                </group>
+                                <group>
+                                    <field name="magento_parent_id"/>
+                                    <field name="complete_category_name"/>
+                                </group>
+                                <group>
+                                    <field name="magento_child_ids"/>
+
+                                </group>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="magento_product_category_search_view" model="ir.ui.view">
+            <field name="name">magento.product.category.search.view</field>
+            <field name="model">magento.product.category</field>
+            <field name="arch" type="xml">
+                <search string="Magento Category search view">
+                    <field name="name"/>
+                    <group expand="0" string="Group By">
+                        <filter name = "Instance" string="Magento Instance" context="{'group_by' : 'instance_id'}"/>
+                        <filter name = "Magento Parent Category" string="Magento Parent" context="{'group_by' : 'magento_parent_id'}"/>
+                        <filter name = "Magento Active Category" string="Magento Active Category" context="{'group_by' : 'is_active'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="magento_product_category_action_ept" model="ir.actions.act_window">
+                <field name="name">Product Category</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">magento.product.category</field>
+                <field name="view_mode">tree,form</field>
+                <field name="view_id" ref="view_magento_product_category_tree"/>
+                <field name="help" type="html">
+                <p>
+                    You can't create Product Category directly from Here. Please sync metadata from settings <i class="fa fa-angle-double-right" /> instance <i class="fa fa-angle-double-right" /> select instance <i class="fa fa-angle-double-right" /> Sync Metadata
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_item_magento_product_category_ept" name="Product Categories"
+            parent="odoo_magento2_ept.menu_magento_proucts_parent" sequence="3"
+            action="magento_product_category_action_ept"/>
+</odoo>

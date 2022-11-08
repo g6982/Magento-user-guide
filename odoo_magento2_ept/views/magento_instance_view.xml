@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_magento_instance_form" model="ir.ui.view">
+        <field name="name">magento.instance.form</field>
+        <field name="model">magento.instance</field>
+        <field name="arch" type="xml">
+            <form string="Magento Instance" create="false">
+                <header>
+                    <button name="synchronize_metadata" type="object" class="oe_highlight"
+                            string="Synchronize Metadata"/>
+                    <button name="magento_test_connection" type="object" string="Test connection"/>
+                </header>
+                <sheet>
+                    <field name="active" invisible="1"/>
+                    <div class="oe_right oe_button_box" position="inside" name="button_box"
+                         style="float:inherit !important">
+                        <button class="oe_stat_button" name="list_of_delivery_method"
+                                type="object" icon="fa-truck" style="width:14.5%"
+                                groups="base.group_system">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Magento</span>
+                                <span class="o_stat_text">Carriers</span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button"
+                                name="%(odoo_magento2_ept.action_magento_notification_configuration)d"
+                                type="action"
+                                icon="fa-bell"
+                                style="width:14.5%"
+                                groups="base.group_system">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Notifications</span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" name="list_of_instance_cron"
+                                type="object" icon="fa-tasks"
+                                attrs="{'invisible': [('cron_count', '=',0)]}"
+                                style="width:14.5%" groups="base.group_system">
+                            <div class="o_field_widget o_stat_info">
+                                <field string="Cron Scheduler" name="cron_count" widget="statinfo"/>
+                            </div>
+                        </button>
+                        <button type="object"
+                                name="cron_configuration_action"
+                                class="oe_stat_button"
+                                icon="fa-clock-o" style="width:16% !important"
+                                groups="base.group_system">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Magento</span>
+                                <span class="o_stat_text">Scheduler</span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button"
+                                name="magento_action_open_deactive_wizard" icon="fa-lock"
+                                type="object" attrs="{'invisible': [('active','=',False)]}">
+                            <span class="o_stat_text" style="color:#2dab2d">Active</span>
+                        </button>
+                        <button class="oe_stat_button"
+                                name="magento_action_open_deactive_wizard" icon="fa-unlock"
+                                type="object" attrs="{'invisible': [('active','=',True)]}">
+                            <span class="o_stat_text" style="color:#da3434">Archive</span>
+                        </button>
+                        <button name="open_all_websites" type="object"
+                                icon="fa-sitemap" class="oe_stat_button"
+                                style="width:16% !important;float: left; border-right: 1px solid #ced4da;">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Websites</span>
+                            </div>
+                        </button>
+                    </div>
+                    <field name="id" invisible="1"/>
+                    <field name="is_multi_warehouse_in_magento" invisible="1"/>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name" class="oe_inline"/>
+                    </h1>
+
+                    <group>
+                        <group colspan="4">
+                            <group>
+                                <field name="magento_url" placeholder="e.g. http://my.magento.com"
+                                       readonly="1"/>
+                                <field name="magento_admin_url" placeholder="e.g. http://my.magento.com/admin"
+                                       readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="magento_version"
+                                       attrs="{'readonly': [('active', '=', True)]}"/>
+                            </group>
+                            <group>
+                                <field name="access_token" password="1"
+                                       attrs="{'invisible': [('active', '=', True)]}"/>
+                            </group>
+                        </group>
+                        <group colspan="2">
+                            <group>
+                                <field name="company_id" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="catalog_price_scope" required="1"/>
+                            </group>
+                            <group>
+                                <field name="magento_verify_ssl"
+                                       attrs="{'readonly': [('active', '=', True)]}"/>
+                            </group>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="other_info" string="Other Info">
+                            <group string="Import Operations">
+                                <group>
+                                    <field name="last_order_import_date"/>
+                                </group>
+                                <group>
+                                    <field name="last_product_import_date"/>
+                                </group>
+                            </group>
+                            <group string="Export Stock">
+                                <p colspan="2" class="alert alert-warning" role="alert">
+                                    <div style="color:#ff0000; font-size:15px;">
+                                        <b>Important Note:</b>
+                                    </div>
+                                    <div class="d-inline-block w-100">
+                                        <div class="row">
+                                            <div class="col-11 p-0">
+                                                <ul>
+                                                    <li>
+                                                        By specifying the batch size, you can
+                                                        determine how many stock items will be
+                                                        exported together.
+                                                    </li>
+                                                    <li>
+                                                        For Magento, exporting
+                                                        maximum 300 products' stock will be possible
+                                                        in a single request.
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </p>
+                                <group>
+                                    <field name="batch_size" class="oe_inline"/>
+                                </group>
+                                <group>
+                                    <field name="last_update_stock_time" class="oe_inline"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="active_users" string="Users">
+                            <field name="active_user_ids">
+                                <tree create="false" editable="bottom">
+                                    <field name="user_id" readonly="1"/>
+                                    <field name="magento_import_order_page_count"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="order_defaults" string="Order Defaults">
+                            <group>
+                                <group>
+                                    <field name="discount_product_id" required="1"/>
+                                    <field name="shipping_product_id" required="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="Notification"
+                              string="Notification"
+                              attrs="{'invisible': [('is_create_activity', '=', False)]}">
+                            <group>
+                                <group>
+                                    <field name="is_create_activity" invisible="1"/>
+                                    <field name="activity_type" readonly="1"/>
+                                    <field name="activity_lead_days" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="activity_user_ids"
+                                           readonly="1" widget="many2many_tags"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Instance search view -->
+    <record id="magento_instance_search_view_ept"
+            model="ir.ui.view">
+        <field name="name">Magento Instance Search View</field>
+        <field name="model">magento.instance</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Magento Instance">
+                <field name="name"/>
+                <filter name="archive" string="Archived"
+                        domain="[('active','=',False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_magento_instance_tree" model="ir.ui.view">
+        <field name="name">Magento Instances</field>
+        <field name="model">magento.instance</field>
+        <field name="arch" type="xml">
+            <tree string="Magento Instance" create='false'>
+                <field name="name"/>
+                <field name="magento_url"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_magento_instance" model="ir.actions.act_window">
+        <field name="name">Magento Instances</field>
+        <field name="res_model">magento.instance</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_magento_instance_tree"/>
+    </record>
+
+    <menuitem id="menu_magento_root" name="Magento" sequence="200"
+              web_icon="odoo_magento2_ept,static/description/icon.png"
+              groups="odoo_magento2_ept.group_magento_user_ept"/>
+
+    <menuitem id="menu_configuration_root" parent="menu_magento_root"
+              name="Configuration" sequence="10"
+              groups="odoo_magento2_ept.group_magento_manager_ept"/>
+
+    <!--        <menuitem id="menu_instance_details" name="Instance Details"-->
+    <!--            parent="menu_configuration_root" sequence="2"/>-->
+
+    <menuitem id="menu_magento_instance" name="Instances"
+              parent="odoo_magento2_ept.menu_configuration_root" action="action_magento_instance"
+              sequence="2"/>
+</odoo>

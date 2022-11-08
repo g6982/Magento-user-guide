@@ -1,0 +1,47 @@
+<odoo>
+    <data noupdate="1">
+        <!-- Sequences for magento.order.data.queue.ept -->
+        <record id="seq_order_queue_data" model="ir.sequence">
+            <field name="name">Magento Sequence Order Queue Data</field>
+            <field name="code">magento.order.data.queue.ept</field>
+            <field name="prefix">OQD</field>
+            <field name="padding">6</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False" />
+        </record>
+
+        <!-- Sequences for sync.import.product.queue -->
+        <record id="magento_seq_import_product_queue_data" model="ir.sequence">
+            <field name="name">Sequence Sync/ Import Magento product Queue Data</field>
+            <field name="code">sync.import.magento.product.queue</field>
+            <field name="prefix">SIPD</field>
+            <field name="padding">6</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False" />
+        </record>
+
+        <!-- Sequences for magento.customer.queue.ept -->
+        <record id="seq_customer_queue_data" model="ir.sequence">
+            <field name="name">Magento Sequence Customer Queue Data</field>
+            <field name="code">magento.customer.data.queue.ept</field>
+            <field name="prefix">CQD</field>
+            <field name="padding">6</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False" />
+        </record>
+
+         <!-- Sequences for magento.export.stock.queue.ept -->
+        <record id="seq_customer_queue_data" model="ir.sequence">
+            <field name="name">Magento Sequence Export Stock Queue Data</field>
+            <field name="code">magento.export.stock.queue.ept</field>
+            <field name="prefix">ESQ</field>
+            <field name="padding">6</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False" />
+        </record>
+    </data>
+</odoo>

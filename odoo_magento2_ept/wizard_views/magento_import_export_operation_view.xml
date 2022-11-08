@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="ir_attachment_import_transfer_product" model="ir.attachment">
+            <field name="name">magento_product_export.csv</field>
+            <field name="datas" type="base64"
+                   file="odoo_magento2_ept/data/magento_product_export.csv"/>
+            <field name="res_model">magento.import.export.ept</field>
+            <field name="public">True</field>
+        </record>
+        <record id="view_magento_import_export_operation" model="ir.ui.view">
+            <field name="name">Magento Opration</field>
+            <field name="model">magento.import.export.ept</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="magento_instance_id"
+                                   options="{'no_create':True,'no_create_edit': True,'no_open': True}" required="1"/>
+                        </group>
+                        <group>
+                            <field name="operations" required="1"/>
+                        </group>
+                    </group>
+                    <notebook
+                            attrs="{'invisible': [('operations', 'not in', ['import_specific_order','import_specific_product','import_configurable_products','import_simple_products', 'import_product_stock', 'import_customer','import_unship_sale_order','import_ship_sale_order','import_cancel_orders', 'map_products'])]}">
+                        <page string='Sync Option'>
+                            <div class="row">
+                                <div class='col-md-8'>
+                                    <group>
+                                        <field name="import_specific_sale_order"
+                                               attrs="{'invisible' : [('operations','!=','import_specific_order')], 'required':[('operations','==','import_specific_order')]}"/>
+                                        <field name="import_specific_product"
+                                               attrs="{'invisible' : [('operations','!=','import_specific_product')], 'required':[('operations','==','import_specific_product')]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="do_not_update_existing_product" widget="boolean_toggle"
+                                               attrs="{'invisible' : [('operations','not in',['import_configurable_products', 'import_simple_products','import_specific_product'])],
+                               'required':[('operations','in',['import_configurable_products', 'import_simple_products','import_specific_product'])]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="auto_validate_stock" widget="boolean_toggle"
+                                               attrs="{'invisible' : [('operations','not in',['import_product_stock'])]}"/>
+                                    </group>
+                                    <group>
+                                        <group string="Select Date Range For Import"
+                                               attrs="{'invisible':[('operations','not in',['import_configurable_products', 'import_simple_products','import_customer','import_unship_sale_order','import_ship_sale_order','import_cancel_orders'])]}"
+                                               class="w-100">
+                                            <label for="start_date" string="Date"/>
+                                            <div class="d-inline-block">
+                                                <field name="start_date" widget="daterange"
+                                                       options="{'related_end_date': 'end_date'}"
+                                                       class="oe_inline"/>
+                                                To
+                                                <field name="end_date" widget="daterange"
+                                                       attrs="{'required': [('operations', '=', 'import_products')]}"
+                                                       options="{'related_start_date': 'start_date'}"
+                                                       class="oe_inline"/>
+                                            </div>
+                                        </group>
+                                    </group>
+                                    <group string="Mapping Magento Products Using CSV"
+                                           attrs="{'invisible':[('operations','!=','map_products')]}">
+                                        <div>
+                                            <div attrs="{'invisible':[('operations','!=','map_products')]}">
+                                                <field name="file_name" invisible="1"/>
+                                                <field name="datas" filename="file_name" class="oe_inline"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <button string="Download Sample Attachment"
+                                                    name="download_sample_attachment"
+                                                    type="object"/>
+                                        </div>
+                                    </group>
+                                </div>
+                            </div>
+                        </page>
+                    </notebook>
+
+                    <p colspan="2" class="alert alert-warning" role="alert"
+                       attrs="{'invisible': [('operations', '!=', 'export_product_stock')]}">
+                        <div style="color:#ff0000; font-size:15px;">
+                            <b>Important Note:</b>
+                        </div>
+                        <div class="d-inline-block w-100">
+                            <div class="row">
+                                <div class="col-11 p-0">
+                                    <ul>
+                                        <li>
+                                            By specifying the batch size, you can
+                                            determine how many stock items will be
+                                            exported together.
+                                        </li>
+                                        <li>
+                                            For Magento, exporting
+                                            maximum 300 products' stock will be possible
+                                            in a single request.
+                                        </li>
+                                        <li>
+                                            By default, Batch size value is 200. You can change it
+                                            from Instance -> Other Info tab.
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </p>
+                    <footer>
+                        <button name="execute" string="Execute" type="object"
+                                class="oe_highlight"/>
+                        <button string="Cancel" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wizard_magento_import_export_operation" model="ir.actions.act_window">
+            <field name="name">Magento Operation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">magento.import.export.ept</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="view_magento_process_import_export_from_more_ept" model="ir.ui.view">
+            <field name="name">Process Import/Export</field>
+            <field name="model">magento.import.export.ept</field>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <form string="Import/Export">
+                    <group>
+                        <field name="export_method" required="1"/>
+                        <field name="magento_instance_id"
+                               options="{'no_create':True,'no_create_edit': True}" required="1"/>
+                    </group>
+                    <group>
+                        <div style="color:#000000">
+                            <p class="alert alert-warning" role="alert">
+                                <u>
+                                    <h3 style="font-weight:bold;color:#7d5a29">Note :</h3>
+                                </u>
+                                <b>
+                                    <ol>
+                                        <li>
+                                            Products without Internal Reference (SKU) will not
+                                            be export in Magento Product Layer.
+                                        </li>
+                                        <li>
+                                            You can import CSV file here: Magento =>
+                                            Operations
+                                            =>Map Products
+                                        </li>
+                                        <li>
+                                            Do not change the name of the Header fields of csv file
+                                        </li>
+                                        <li>
+                                            Only change the Lower case fields value as per your need
+                                        </li>
+                                    </ol>
+                                </b>
+                            </p>
+                        </div>
+                    </group>
+                    <footer>
+                        <button string="Export Products" class="oe_highlight" type="object"
+                                name="prepare_product_for_export_in_magento"/>
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wizard_magento_product_for_prepare" model="ir.actions.act_window">
+            <field name="name">Magento2 - Prepare Product for Export</field>
+            <field name="res_model">magento.import.export.ept</field>
+            <field name="binding_model_id" ref="product.model_product_template"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_magento_process_import_export_from_more_ept"/>
+            <field name="target">new</field>
+        </record>
+
+        <!-- Below action used to redirect operation wizard from the instance kanban view-->
+        <record id="action_wizard_magento_instance_import_export_operations"
+                model="ir.actions.act_window">
+            <field name="name">Magento Operations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">magento.import.export.ept</field>
+            <field name="view_mode">form</field>
+            <field name="view_id"
+                   ref="odoo_magento2_ept.view_magento_import_export_operation"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="operation_magento_parent_menu" parent="menu_magento_root"
+                  name="Operations" action="action_wizard_magento_import_export_operation"
+                  sequence="4"/>
+
+    </data>
+</odoo>

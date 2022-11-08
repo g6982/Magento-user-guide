@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="ir_attachment_emipro_api_change_module" model="ir.attachment">
+            <field name="name">emipro_magento_api_change.zip</field>
+            <field name="datas" type="base64" file="odoo_magento2_ept/data/emipro_magento_api_change.zip"/>
+            <field name="res_model">res.config.magento.instance</field>
+            <field name="public">True</field>
+        </record>
+        <record id="view_res_config_magento_instance" model="ir.ui.view">
+            <field name="name">Configure Instance</field>
+            <field name="model">res.config.magento.instance</field>
+            <field name="arch" type="xml">
+                <form string="Configure Instance" class="oe_form_configuration">
+                    <sheet>
+                        <label for="name" class="oe_edit_only" />
+                        <h1>
+                            <field name="name" required="1" class="oe_inline" />
+                        </h1>
+                        <group>
+                            <group>
+                                <field name='magento_version' required="1" string="Version"/>
+                                <field name="access_token" required="1" string="Access Token" password="1"/>
+                            </group>
+                            <group>
+                                <field name="company_id" required="1" string="Company"  domain="[('id', 'in', context.get('allowed_company_ids'))]"/>
+                                <field name='magento_url' required="1" string="Host" placeholder="http://test.emiprotechnologies.com"/>
+                                <field name='magento_admin_url' required="1" string="Magento Admin Url" placeholder="http://test.emiprotechnologies.com/admin"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name='magento_verify_ssl' widget="boolean_toggle"/>
+                        </group>
+                        <group>
+                            <field name='is_multi_warehouse_in_magento' widget="boolean_toggle" attrs="{'invisible': ['|', ('magento_version', '==', '2.1'),('magento_version', '==', '2.2')]}"/>
+                        </group>
+                        <group>
+                            <p colspan="2" class="alert alert-warning" role="alert">
+                                <div style="color:#ff0000; font-size:15px;">
+                                    <b>Important Note:</b>
+                                </div>
+                                <div class="d-inline-block w-100">
+                                    <div class="row">
+                                        <div class="col-11 p-0">
+                                            <ul>
+                                                <li>
+                                                    After creating the instance, please make sure you
+                                                    complete all
+                                                    the other
+                                                    necessary configurations such as
+                                                    Warehouse, Pricelist etc. from
+                                                    the Magento setting screen.
+                                                </li>
+                                                <li>
+                                                    Magento =&gt; Configurations =&gt; Settings
+                                                </li>
+                                                <li>
+                                                    Connector version (15.0.2.0) or later versions must require API change plugin version (1.0.9).
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-inline-block w-100">
+                                    <div class="row">
+                                        <div class="col-11 p-0">
+                                            <ul>
+                                                <li>
+                                                    You will need to install the Magento API module on your Magento store to test the connector.
+                                                    To download the module, please click on below link.
+                                                </li>
+                                                <button string="Download Emipro Magento API Module" name="download_magento_api_module" type="object"/>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </p>
+                        </group>
+                        <footer>
+                            <button string="Create" type="object" name="create_magento_instance" class="oe_highlight" />
+                            or
+                            <button string="Cancel" class="oe_link" special="cancel" />
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="res_config_action_magento_instance_ept" model="ir.actions.act_window">
+            <field name="name">Magento Instance</field>
+            <field name="res_model">res.config.magento.instance</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_res_config_magento_instance" />
+        </record>
+    </data>
+</odoo>

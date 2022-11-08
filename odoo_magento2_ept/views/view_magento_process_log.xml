@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="magento_process_log_ept_tree_view" model="ir.ui.view">
+        <field name="name">Magento process log tree view</field>
+        <field name="model">common.log.book.ept</field>
+        <field name="inherit_id" ref="common_connector_library.action_common_log_book_ept_tree"/>
+        <field name="arch" type="xml">
+            <tree position="attributes">
+                <attribute name="create">false</attribute>
+                <attribute name="edit">false</attribute>
+                <attribute name="delete">false</attribute>
+            </tree>
+        </field>
+    </record>
+
+    <record id="magento_process_log_ept_form_view" model="ir.ui.view">
+        <field name="name">Magento Process log form view</field>
+        <field name="model">common.log.book.ept</field>
+        <field name="inherit_id" ref="common_connector_library.action_common_log_book_ept_form"/>
+        <field name="arch" type="xml">
+            <form position="attributes">
+                <attribute name="create">false</attribute>
+                <attribute name="edit">false</attribute>
+                <attribute name="delete">false</attribute>
+
+            </form>
+        </field>
+    </record>
+
+    <record id="action_magento_process_log_ept" model="ir.actions.act_window">
+        <field name="name">Magento Process Job Log</field>
+        <field name="res_model">common.log.book.ept</field>
+        <field name="view_id" ref="magento_process_log_ept_tree_view"/>
+        <field name="domain">[('magento_instance_id','!=',False)]</field>
+    </record>
+
+    <record id="action_magento_process_log_lines_ept" model="ir.actions.act_window">
+        <field name="name">Log Lines</field>
+        <field name="res_model">common.log.lines.ept</field>
+        <field name="view_mode">tree,form</field>
+        <!--        <field name="domain">[('magento_instance_id','!=',False)]</field>-->
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No mismatch log lines are there!
+            </p>
+            <p>If any import/export/update process has got issue, log lines will be shown here.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_magento_log" parent="menu_magento_root"
+              name="Logs" sequence="6"/>
+
+    <menuitem id="menu_magento_process_log"
+              parent="menu_magento_log" name="Log Book"
+              action="odoo_magento2_ept.action_magento_process_log_ept"
+              sequence="5"/>
+
+    <menuitem id="menu_magento_process_log_line"
+              parent="menu_magento_log" name="Log Lines"
+              action="odoo_magento2_ept.action_magento_process_log_lines_ept"
+              sequence="5"/>
+</odoo>

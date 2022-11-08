@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record model="ir.ui.view" id="sale_form_inherit_view">
+            <field name="name">sale.form.inherit.view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <field name="is_cancel_order_exportable" invisible="1"/>
+                    <button name="cancel_order_in_magento" type="object" string="Cancel In Magento"
+                            attrs="{'invisible' : ['|','|', ('magento_instance_id','=',False),('state','!=','cancel'),
+                            ('is_cancel_order_exportable','=',True)]}"/>
+                </xpath>
+            </field>
+        </record>
+</odoo>

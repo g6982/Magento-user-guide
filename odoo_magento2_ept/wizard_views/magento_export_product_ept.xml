@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="magento_export_product_stock_ept_wizard" model="ir.ui.view">
+        <field name="name">Export Product Stock</field>
+        <field name="model">magento.export.product.ept</field>
+        <field name="priority">11</field>
+        <field name="arch" type="xml">
+            <form string="Export Product Stocks">
+                <sheet>
+                    <p colspan="2" class="alert alert-danger" role="alert">
+                        <h3 style="font-weight:bold;color:#7d5a29">Important Note:</h3>
+                        <ol>
+                            <li>
+                                If multiple products are selected, a maximum of 80 products can be processed at a time.
+                            </li>
+                        </ol>
+                    </p>
+                    <footer>
+                        <button string="Export Stock" class="oe_highlight" type="object" name="export_stock_in_magento_ept"/>
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="magento_export_products_ept_wizard" model="ir.ui.view">
+        <field name="name">Export Product In Magento</field>
+        <field name="model">magento.export.product.ept</field>
+        <field name="priority">11</field>
+        <field name="arch" type="xml">
+            <form string="Export New Products in Magento">
+                    <group invisible="context.get('allow_to_create')">
+                        <p colspan="2" class="alert alert-warning" role="alert">
+                            <div style="color:#ff0000; font-size:15px;">
+                                <b>Important Note:</b><br/>
+                                "By checking the check box 'Update basic details?' Tax class, product category, and website will be updated for the Product in the Magento
+                            </div>
+                        </p>
+                    </group>
+                    <group invisible="context.get('allow_to_update')">
+                        <group>
+                            <field name="attribute_set_id" widget="selection"/>
+                            <field name="magento_publish" widget="selection"/>
+                        </group>
+                        <group>
+                            <field name="is_set_price" />
+                            <field name="is_set_image" />
+                        </group>
+                    </group>
+                    <group invisible="context.get('allow_to_create')">
+                        <group>
+                            <field name="update_price"/>
+                            <field name="m_update_image" />
+                        </group>
+                        <group>
+                            <field name="description_config_value" invisible="1"/>
+                            <field name="m_update_basic_details"/>
+                            <field name="m_update_description" attrs="{'invisible': [('description_config_value', '=', False)]}"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Process To Create Product"
+                                invisible="context.get('allow_to_update')"
+                                class="oe_highlight" type="object" name="process_export_products_in_magento"/>
+                        <button string="Process To Update Product"
+                                invisible="context.get('allow_to_create')"
+                                class="oe_highlight" type="object" name="process_update_products_in_magento"/>
+                        <button string="Cancel" special="cancel" class="oe_highlight"/>
+                    </footer>
+                </form>
+        </field>
+    </record>
+
+    <record id="action_wizard_magento_export_products" model="ir.actions.act_window">
+        <field name="name">Export Product in Magento</field>
+        <field name="res_model">magento.export.product.ept</field>
+        <field name="binding_model_id" ref="model_magento_product_template"/>
+        <field name="view_id" ref="magento_export_products_ept_wizard"/>
+        <field name="target">new</field>
+        <field name="context">{'allow_to_create':True}</field>
+    </record>
+
+    <record id="action_wizard_magento_update_products_ept" model="ir.actions.act_window">
+        <field name="name">Update Existing Products in Magento</field>
+        <field name="res_model">magento.export.product.ept</field>
+        <field name="binding_model_id" ref="model_magento_product_template"/>
+        <field name="view_id" ref="magento_export_products_ept_wizard"/>
+        <field name="target">new</field>
+        <field name="context">{'allow_to_update':True}</field>
+    </record>
+
+    <record id="action_wizard_magento_update_product_stocks" model="ir.actions.act_window">
+        <field name="name">Update Product Stock in Magento</field>
+        <field name="res_model">magento.export.product.ept</field>
+        <field name="binding_model_id" ref="model_magento_product_template"/>
+        <field name="view_id" ref="magento_export_product_stock_ept_wizard"/>
+        <field name="target">new</field>
+        <field name="context">{'allow_to_update_stock':True}</field>
+    </record>
+</odoo>

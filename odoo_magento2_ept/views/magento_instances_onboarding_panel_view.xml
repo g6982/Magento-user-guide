@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ONBOARDING STEPS -->
+    <template id="onboarding_magento_instance_configuration">
+        <t t-call="base.onboarding_step">
+            <t t-set="title">Create Instance</t>
+            <t t-set="description">Create the new Magento instance here.</t>
+            <t t-set="done_icon" t-value="'fa-star'"/>
+            <t t-set="done_text">Looks great!</t>
+            <t t-set="btn_text">Create Instance</t>
+            <t t-set="model" t-value="'res.config.magento.instance'"/>
+            <t t-set="method" t-value="'action_open_magento_instance_wizard'"/>
+            <t t-set="state" t-value="state.get('magento_instance_onboarding_state')"/>
+        </t>
+    </template>
+
+    <template id="onboarding_magento_basic_configuration">
+        <t t-call="base.onboarding_step">
+            <t t-set="title">Manage Configurations</t>
+            <t t-set="description">Manage the configuration for your instance.</t>
+            <t t-set="done_icon" t-value="'fa-star'"/>
+            <t t-set="done_text">Great!</t>
+            <t t-set="btn_text">Configure</t>
+            <t t-set="model" t-value="'res.config.settings'"/>
+            <t t-set="method" t-value="'action_magento_open_basic_configuration_wizard'"/>
+            <t t-set="state" t-value="state.get('magento_basic_configuration_onboarding_state')"/>
+        </t>
+    </template>
+
+    <template id="onboarding_magento_financial_status_configuration">
+        <t t-call="base.onboarding_step">
+            <t t-set="title">Financial Status</t>
+            <t t-set="description">Configure the Magento Financial Status here.</t>
+            <t t-set="btn_text">Configure</t>
+            <t t-set="done_icon" t-value="'fa-magic'"/>
+            <t t-set="done_text">Nice!</t>
+            <t t-set="model" t-value="'res.config.settings'"/>
+            <t t-set="method" t-value="'action_magento_open_financial_status_wizard'"/>
+            <t t-set="state" t-value="state.get('magento_financial_status_onboarding_state')"/>
+        </t>
+    </template>
+    <template id="onboarding_magento_cron_configuration">
+        <t t-call="base.onboarding_step">
+            <t t-set="title">Scheduler Configurations</t>
+            <t t-set="description">Configure the schedule actions for automation.</t>
+            <t t-set="btn_text">Configure</t>
+            <t t-set="method" t-value="'action_magento_open_cron_configuration_wizard'"/>
+            <t t-set="model" t-value="'magento.cron.configuration'"/>
+            <t t-set="state" t-value="state.get('magento_cron_configuration_onboarding_state')"/>
+        </t>
+    </template>
+
+    <!-- ONBOARDING PANEL-->
+    <template id="magento_instances_onboarding_panel_ept" name="magento.instances.onboarding.panel.ept">
+        <t t-call="base.onboarding_container" groups="odoo_magento2_ept.group_magento_manager_ept">
+            <t t-set="is_magento_panel" t-value="'is_magento_panel'"/>
+            <t t-set="classes" t-value="'o_onboarding_violet hide_in_mobile_device magento_onboarding_ept'"/>
+            <t t-set="bg_image"
+               t-value="'/odoo_magento2_ept/static/src/img/magento_onboarding_image.png'"/>
+            <t t-set="close_method" t-value="'action_close_magento_instances_onboarding_panel'"/>
+            <t t-set="close_model" t-value="'res.company'"/>
+            <t t-call="odoo_magento2_ept.onboarding_magento_instance_configuration"
+               name="magento_instance_step"/>
+            <t t-call="odoo_magento2_ept.onboarding_magento_basic_configuration"
+               name="magento_basic_configuration_step"/>
+            <t t-call="odoo_magento2_ept.onboarding_magento_financial_status_configuration"
+               name="magento_financial_status_step"/>
+            <t t-call="odoo_magento2_ept.onboarding_magento_cron_configuration"
+               name="magento_cron_configurations_step"/>
+        </t>
+    </template>
+
+    <!--
+        Inherited main onboarding view in order to add collapse button
+        @param {is_magento_panel(to add button in specified view )}
+    -->
+    <template id="inherit_onboarding_container" inherit_id="base.onboarding_container">
+        <xpath expr="div[hasclass('o_onboarding_container')]" position="before">
+            <t t-if="is_magento_panel">
+                <button id="magento_button_toggle" t-att-data-company-id="toggle_company_id"
+                        type="button"
+                        t-att-class="'d-none btn btn-link' if is_button_active else 'btn btn-link'"
+                        t-att-style="'background-color:#ececec;border:1px solid #ccc' if hide_panel else ''">
+                    <t t-esc="btn_value"></t>
+                </button>
+            </t>
+        </xpath>
+
+        <!-- Changes to class to toogle the onBoadring panel-->
+        <xpath expr="div[hasclass('o_onboarding_container')]" position="attributes">
+            <attribute name="t-att-class">'o_onboarding_container collapse' if hide_panel else 'o_onboarding_container collapse show'
+            </attribute>
+        </xpath>
+
+        <!-- Add common class in the close button from onboarding panel-->
+        <xpath expr="//div[hasclass('o_onboarding_container')]//a" position="attributes">
+            <attribute name="class">float-right o_onboarding_btn_close common_close_button_hide_ept</attribute>
+        </xpath>
+    </template>
+
+<!--    <template id="inherit_assets_backend_magento" inherit_id="web.assets_backend">-->
+<!--        <xpath expr="." position="inside">-->
+<!--            <script src="/odoo_magento2_ept/static/src/js/magento_button_collapse.js"></script>-->
+<!--        </xpath>-->
+<!--    </template>-->
+
+</odoo>

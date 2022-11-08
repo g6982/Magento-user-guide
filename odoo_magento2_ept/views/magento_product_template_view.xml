@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_magento_product_template_tree" model="ir.ui.view">
+        <field name="name">magento.product.template.tree</field>
+        <field name="model">magento.product.template</field>
+        <field name="arch" type="xml">
+            <tree string="Magento Template" name="magento_template" create="false">
+                <header>
+                    <button name="%(odoo_magento2_ept.action_wizard_magento_update_product_stocks)d"
+                                string="Update product stock"
+                                type="action"/>
+                    <button name="open_export_product_in_magento_ept_wizard"
+                            string="Update Product in Magento"
+                            type="object" context="{'allow_to_update': True}"/>
+                    <button name="unlink_product_from_magento"
+                            string="Unlink Product From Magento"
+                            type="object"
+                            class="oe_highlight"/>
+                </header>
+                <field name="magento_product_template_id" string="Magento Product ID"
+                       invisible="1"/>
+                <field name="magento_sku"/>
+                <field name="magento_product_name"/>
+                <field name="product_type"/>
+                <field name="magento_instance_id"/>
+                <field name="sync_product_with_magento"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_magento_product_exported_ept" model="ir.actions.act_window">
+        <field name="name">Magento Product</field>
+        <field name="res_model">magento.product.template</field>
+        <field name="view_id" ref="view_magento_product_template_tree"/>
+        <field name="domain">[('sync_product_with_magento','=',True), ('magento_instance_id', '=',
+            active_id)]
+        </field>
+    </record>
+
+    <record id="act_magento_template" model="ir.actions.act_window">
+        <field name="name">Magento Product Template</field>
+        <field name="res_model">magento.product.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('odoo_product_template_id','=',active_id)]</field>
+        <field name="context">{'search_default_odoo_product_template_id': active_id}
+        </field>
+    </record>
+
+    <record id="product_template_magento_button" model="ir.ui.view">
+        <field name="name">product.template.magento.button</field>
+        <field name="model">product.template</field>
+        <field name="priority">55</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button"
+                        name="%(odoo_magento2_ept.act_magento_template)d" type="action"
+                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-external-link"
+                        help="Magento Templates">
+                    <field string="Magento Templates" name="magento_template_count"
+                           widget="statinfo"/>
+                </button>
+            </div>
+        </field>
+    </record>
+    <record id="magento_product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.common.form</field>
+        <field name="model">magento.product.template</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form string="Product" create="false">
+                <header>
+                    <button name="open_export_product_in_magento_ept_wizard"
+                            string="Export Product in Magento"
+                            type="object"
+                            attrs="{'invisible':[('sync_product_with_magento','=',True)]}"
+                            context="{'allow_to_create': True}" class="oe_highlight"/>
+                    <button name="open_export_product_in_magento_ept_wizard"
+                            string="Update Product in Magento"
+                            type="object" context="{'allow_to_update': True}"
+                            attrs="{'invisible':[('sync_product_with_magento','=',False)]}"
+                            class="oe_highlight"/>
+
+                    <button name="unlink_product_from_magento"
+                            string="Unlink Product From Magento"
+                            type="object" attrs="{'invisible':[('sync_product_with_magento','=',False)]}"
+                            class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <field name="id" invisible="True"/>
+                    <field name="active" invisible="True"/>
+                    <field name="active_template" class="oe_inline" invisible='1'/>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button"
+                                name="toggle_active" icon="fa-lock"
+                                type="object" attrs="{'invisible': [('active','=',False)]}">
+                            <span class="o_stat_text" style="color:#2dab2d">Active</span>
+                        </button>
+                        <button class="oe_stat_button"
+                                name="toggle_active" icon="fa-unlock"
+                                type="object" attrs="{'invisible': [('active','=',True)]}">
+                            <span class="o_stat_text" style="color:#da3434">Archived</span>
+                        </button>
+                        <button name="open_variant_list" type="object" icon="fa-sitemap"
+                                class="oe_stat_button"
+                                attrs="{'invisible': [('product_type', '!=', 'configurable')]}">
+                            <field string="Variants" name="total_magento_variants"
+                                   widget="statinfo" modifiers="{'readonly': true}"/>
+                        </button>
+                        <button string="Odoo Product" type="object"
+                                name="view_odoo_product_template"
+                                class="oe_stat_button" icon="fa-chain"/>
+                    </div>
+                    <field name="image_1920" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label class="oe_edit_only" for="magento_product_name"
+                               string="Product Name"/>
+                        <h1>
+                            <field name="magento_product_name" placeholder="Product Name"/>
+                        </h1>
+                    </div>
+                    <notebook>
+                        <page string="General Information" name="general_information">
+                            <group>
+                                <group name="group_general">
+                                    <field name="odoo_product_template_id"
+                                           attrs="{'readonly':[('sync_product_with_magento','=',True)]}"/>
+                                    <field name="magento_sku"
+                                           attrs="{'readonly':[('sync_product_with_magento','=',True)]}"/>
+                                    <label for="magento_product_template_id" string="Magento Product Template Id"/>
+                                    <div>
+                                        <field name="magento_product_template_id" readonly="1" string="Magento Product Template Id"/>
+                                        <button name="open_product_in_magento" class="fa fa-external-link btn btn-secondary o_external_button" type="object"
+                                            attrs="{'invisible':[('sync_product_with_magento','=',False)]}" string=" "/>
+                                    </div>
+                                </group>
+                                <group name="group_standard_price">
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="list_price" widget='monetary'
+                                           options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                    <label for="standard_price" groups="base.group_user"
+                                           attrs="{'invisible': [('total_magento_variants', '&gt;', 1)]}"/>
+                                    <div name="standard_price_uom" groups="base.group_user"
+                                         attrs="{'invisible': [('total_magento_variants', '&gt;', 1)]}">
+                                        <field name="standard_price" widget='monetary'
+                                               options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="variants" string="Variants"
+                              groups="product.group_product_variant">
+                            <field name="attribute_line_ids" widget="one2many_list"
+                                   context="{'show_attribute': False}">
+                                <tree string="Variants" editable="bottom">
+                                    <field name="attribute_id"/>
+                                    <field name="value_ids" widget="many2many_tags"
+                                           options="{'no_create_edit': True}"
+                                           domain="[('attribute_id', '=', attribute_id)]"
+                                           context="{'default_attribute_id': attribute_id}"/>
+                                </tree>
+                            </field>
+                            <p class="oe_grey">
+                                <strong>Warning</strong>: adding or deleting attributes
+                                will delete and recreate existing variants and lead
+                                to the loss of their possible customizations.
+                            </p>
+                        </page>
+                        <page string="Magento Details" name="magento_conf">
+                            <group>
+                                <group colspan="4">
+                                    <group>
+                                        <field name="magento_instance_id" readonly="1"/>
+                                        <field name="magento_product_template_id" readonly="1"
+                                               invisible="1"/>
+                                        <field name="created_at" readonly="1"/>
+                                        <field name="updated_at" readonly="1"/>
+                                        <field name="product_type" readonly="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="sync_product_with_magento" invisible='1'/>
+                                        <field name="attribute_set_id" widget="selection"
+                                               domain="[('instance_id','=',magento_instance_id)]"
+                                               attrs="{'readonly':[('sync_product_with_magento','=',True)]}"/>
+                                        <field name="export_product_to_all_website"/>
+                                        <field name="magento_website_ids" widget="many2many_tags"
+                                               options="{'no_create_edit': True}"
+                                               attrs="{'invisible':[('export_product_to_all_website','=',True)]}"/>
+                                        <field name="magento_tax_class"
+                                               options="{'no_open':True,'no_create': True}"
+                                               domain="[('magento_tax_class_type','=','PRODUCT'), ('magento_instance_id','=',magento_instance_id)]"/>
+                                    </group>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Magento Categories">
+                            <group name="classification_categories">
+                                <field name="category_ids" nolabel="1" colspan="2"
+                                       options="{'no_create': True}" modifiers="{}"
+                                       domain="[('instance_id','=',magento_instance_id)]">
+                                    <tree delete="1">
+                                        <field name="complete_category_name"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+                        <page string="Images" name="images">
+                            <group string="Images Info" colspan="4">
+                                <field name="magento_product_image_ids"
+                                       context="{'default_name': magento_product_name,'default_magento_tmpl_id':id}"
+                                       mode="kanban" nolabel="1">
+                                </field>
+                            </group>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <group name="description">
+                                <group name="description">
+                                    <separator string="Description" colspan="4"/>
+                                    <field name="description" colspan="4" nolabel="1"
+                                           placeholder="This note will be displayed on the quotations."
+                                           modifiers="{}"/>
+                                    <separator string="Short Description" colspan="4"/>
+                                    <field name="short_description" colspan="4" nolabel="1"
+                                           placeholder="This note will be displayed on the quotations."
+                                           modifiers="{}"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="magento_product_template_normal_action_sell_ept"
+            model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">magento.product.template</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_id" ref="view_magento_product_template_tree"/>
+        <field name="context">
+            {'form_view_ref':'odoo_magento2_ept.magento_product_template_form_view'}
+        </field>
+        <field name="help" type="html">
+            <p>You can't create Product directly from Here.</p>
+            <br/>
+            <p>
+                <b>1. Import Products from Magento</b>
+                <br/>
+                Go to
+                <i>Magento
+                    <i class="fa fa-angle-double-right"/>
+                    Operation
+                    <i class="fa fa-angle-double-right"/>
+                    All Operation
+                </i>
+                <br/>
+                Select 'Import Products' and click on Execute.
+            </p>
+            <p>
+                <p>
+                    <b>2. Automatic Import Products from Magento to Odoo</b>
+                    <br/>
+                    Go to
+                    <i>Magento
+                        <i class="fa fa-angle-double-right"/>
+                        Configuration
+                        <i class="fa fa-angle-double-right"/>
+                        Instances
+                    </i>
+                    <br/>
+                    click on Magento Schedulers and Activate "Import Product" cron job.
+                </p>
+            </p>
+        </field>
+    </record>
+
+    <record id="magento_product_template_search_view" model="ir.ui.view">
+        <field name="name">magento.product.template.search.view</field>
+        <field name="model">magento.product.template</field>
+        <field name="arch" type="xml">
+            <search string="Magento product Template Search View">
+                <field name="magento_sku"/>
+                <field name="magento_product_name"/>
+                <field name="magento_instance_id"/>
+                <group expand="0" string="Group By">
+                    <filter name="Instance" string="Magento Instance"
+                            context="{'group_by' : 'magento_instance_id'}"/>
+                    <filter name="Product Type" string="Product Type"
+                            context="{'group_by' : 'product_type'}"/>
+                </group>
+                <filter name="archive" string="Archived" domain="[('active','=',False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <menuitem id="menu_item_magento_products_ept" name="Products"
+              parent="odoo_magento2_ept.menu_magento_proucts_parent" sequence="1"
+              action="magento_product_template_normal_action_sell_ept"/>
+</odoo>

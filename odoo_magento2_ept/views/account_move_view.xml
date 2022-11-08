@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="magento_invoice_tree_view_ept" model="ir.ui.view">
+        <field name="name">magento.account.invoice.tree.ept</field>
+        <field name="model">account.move</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <tree create="0" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'"
+                  string="Invoice">
+                <header>
+                    <button name="%(odoo_magento2_ept.magento_export_credit_memo_wizard_action)d"
+                            string="Export Credit Memo"
+                            type="action" class="btn-primary"
+                            attrs="{'invisible':[('move_type','!=','out_invoice')]}"/>
+                </header>
+                <field name="invoice_origin" string="Order Number"/>
+                <field name="partner_id" invisible="1"/>
+                <field name="commercial_partner_id" invisible="1"/>
+                <field name="company_id" groups="base.group_multi_company"
+                       options="{'no_create': True}"/>
+                <field name="invoice_partner_display_name"
+                       invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')"
+                       groups="base.group_user" string="Customer"/>
+                <field name="invoice_user_id" string="Salesperson"/>
+                <field name="amount_total_signed" sum="Total"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="company_currency_id" invisible="1"/>
+                <field name="magento_instance_id"/>
+                <field name="state"/>
+                <field name="move_type" invisible="context.get('move_type',True)"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="magento_credit_memo_tree_view_ept" model="ir.ui.view">
+        <field name="name">magento.account.move.credit.note.tree.ept</field>
+        <field name="model">account.move</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <tree create="0" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'"
+                  string="Invoice">
+                <header>
+                    <button name="%(odoo_magento2_ept.magento_export_credit_memo_wizard_action)d"
+                            string="Export Credit Memo"
+                            type="action" class="btn-primary"/>
+                </header>
+                <field name="invoice_origin" string="Order Number"/>
+                <field name="partner_id" invisible="1"/>
+                <field name="commercial_partner_id" invisible="1"/>
+                <field name="company_id" groups="base.group_multi_company"
+                       options="{'no_create': True}"/>
+                <field name="invoice_partner_display_name"
+                       invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')"
+                       groups="base.group_user" string="Customer"/>
+                <field name="invoice_user_id" string="Salesperson"/>
+                <field name="amount_total_signed" sum="Total"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="company_currency_id" invisible="1"/>
+                <field name="magento_instance_id"/>
+                <field name="state"/>
+                <field name="move_type" invisible="context.get('move_type',True)"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Inherited Form View Section -->
+    <record id="inherited_account_invoice_form_view" model="ir.ui.view">
+        <field name="name">inherited.account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[5]" position="after">
+                <button name="export_invoice_magento" string="Export Invoice In Magento"
+                        type="object" class="oe_highlight"
+                        attrs="{'invisible':['|','|','|','|','|',
+                            ('is_magento_invoice','=',False),
+                            ('move_type','!=','out_invoice'),
+                            ('is_exported_to_magento','=',True),
+                            ('state', '!=', 'posted'),
+                            ('magento_instance_id','=',False),
+                            ('max_no_of_attempts','&gt;',3)]}"/>
+            </xpath>
+            <xpath expr="//page[@name='other_info']/group/group[@name='accounting_info_group']"
+                   position="after">
+                <group string="Magento" name="magento_info_group">
+                    <field name="magento_instance_id" readonly="1"/>
+                    <field name="magento_invoice_id"/>
+                    <field name="is_magento_invoice"/>
+                    <field name="magento_payment_method_id"/>
+                    <field name="is_exported_to_magento"/>
+                    <field name="max_no_of_attempts" invisible="1"/>
+                    <field name="magento_message"
+                           attrs="{'invisible':[('magento_message', '=', False)]}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherited Search View Section -->
+    <record id="magento_view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">account.move.search</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='status']" position="after">
+                <filter string="Magento Instances" name="magento_instance_id" domain="[]"
+                        context="{'group_by':'magento_instance_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_magento_invoice_tree1_ept" model="ir.actions.act_window">
+        <field name="name">Customer Invoices</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('move_type','=','out_invoice'),('magento_instance_id','!=',False)]
+        </field>
+        <field name="context">{'default_move_type':'out_invoice','move_type':'out_invoice',
+            'journal_type': 'sale'}
+        </field>
+        <field name="view_id" ref="magento_invoice_tree_view_ept"/>
+        <field name="search_view_id" ref="magento_view_account_invoice_filter"/>
+        <field name="help" type="html">
+            <div>
+                <br/>
+                <br/>
+                <br/>
+                <p>
+                    <b>There is no any Invoice created for any of your Magento Sale Orders.</b>
+                    <p></p>
+                    Based on Automatic Workflow set in Order,Invoice is created.
+                    If your Automatic workflow's Invoice Policy is set to "After
+                    Delivery", then once your shipping order completed,
+                    you can make Invoice from Delivery Order.
+                    You can't create Magento Invoice manually from here.
+                    However, you can make manually invoice from Magento Sale Order.
+                </p>
+            </div>
+        </field>
+    </record>
+
+    <record id="magento_account_move_inherit_form_view" model="ir.ui.view">
+        <field name="name">magento.account.move.inherit.form.view</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="magento_instance_id" invisible="1"/>
+                <field name="is_exported_to_magento" invisible="1"/>
+                <button name="%(odoo_magento2_ept.magento_export_credit_memo_wizard_action)d"
+                        type="action"
+                        string="Create at Magento"
+                        help="Issue Credit Note in Magento"
+                        attrs="{'invisible': ['|','|','|', ('magento_instance_id', '=', False), ('is_exported_to_magento', '=', True), ('move_type', '!=', 'out_refund'), ('state', '!=', 'posted')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_magento_refund_invoice_tree_ept" model="ir.actions.act_window">
+        <field name="name">Customer Refunds</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('move_type','=','out_refund'),('magento_instance_id','!=',False)]
+        </field>
+        <field name="context">{'default_move_type':'out_refund','move_type':'out_refund',
+            'journal_type': 'sale'}
+        </field>
+        <field name="view_id" ref="magento_credit_memo_tree_view_ept"/>
+        <field name="search_view_id" ref="magento_view_account_invoice_filter"/>
+        <field name="help" type="html">
+            <div>
+                <br/>
+                <br/>
+                <br/>
+                <p>
+                    <b>There is no any Refund Invoice created for any of your Magento Sale Orders.
+                    </b>
+                </p>
+            </div>
+        </field>
+    </record>
+
+<!--    <menuitem id="menu_invoice_details_parent" name="Invoices" sequence="3"-->
+<!--              parent="odoo_magento2_ept.menu_magento_sales_and_customer"/>-->
+
+    <menuitem id="menu_magento_invoice_ept" name="Invoices"
+              parent="odoo_magento2_ept.menu_magento_sales_and_customer" sequence="4"
+              action="action_magento_invoice_tree1_ept"/>
+
+    <menuitem id="menu_magento_refund_invoice_ept" name="Refunds"
+              parent="odoo_magento2_ept.menu_magento_sales_and_customer" sequence="5"
+              action="action_magento_refund_invoice_tree_ept"/>
+</odoo>

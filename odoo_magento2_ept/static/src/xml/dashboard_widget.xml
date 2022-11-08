@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<template>
+    <!-- Remove Refund button from the dashboard -->
+    <t t-extend="graph_dashboard_ept">
+        <t t-jquery="#instance_refund" t-operation="replace" />
+    </t>
+</template>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="magento_delivery_carrier_tree_view" model="ir.ui.view">
+            <field name="name">magento.delivery.carrier.tree.view</field>
+            <field name="model">magento.delivery.carrier</field>
+            <field name="arch" type="xml">
+                <tree create="0">
+                    <field name="magento_instance_id" class="oe_inline" />
+                    <field name="carrier_label" string="Label" class="oe_inline"/>
+                    <field name="magento_carrier_title" string="Title" class="oe_inline"/>
+                    <field name="carrier_code" string="Code" class="oe_inline"/>
+                </tree>
+            </field>
+        </record>
+    </data>
+</odoo>

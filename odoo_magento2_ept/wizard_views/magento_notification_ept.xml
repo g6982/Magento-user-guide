@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--This is a common view for cron configuration wizard -->
+    <record id="magento_notification_ept_form_view" model="ir.ui.view">
+        <field name="name">magento.notification.ept.form.view</field>
+        <field name="model">magento.notification.ept</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="is_enable"/>
+                    </group>
+                    <group name='magento_process_queue_manually'>
+                        <p colspan="2" class="alert alert-warning" role="alert">
+                            <b>
+                                <p>
+                                    Schedule Activity Will be created for below processes:
+                                </p>
+                                <ul>
+                                    <li>
+                                        Process Product Queue is interrupted after 3 attempts.
+                                    </li>
+                                    <li>
+                                        Export Shipment process is failed after 3 attempts.
+                                    </li>
+                                    <li>
+                                        Export Invoice process is failed after 3 attempts.
+                                    </li>
+                                    <li>
+                                        Queue if failed to process after 3 attempts.
+                                    </li>
+                                </ul>
+                            </b>
+                        </p>
+                    </group>
+                    <notebook>
+                        <page string="Activity Configuration"
+                              attrs="{'invisible': [('is_enable', '=', False)]}">
+                            <group>
+                                <group>
+                                    <field name="activity_type"
+                                           attrs="{'required': [('is_enable', '=', True)]}"/>
+                                    <field name="lead_days"
+                                           attrs="{'required': [('is_enable', '=', True)]}"/>
+                                </group>
+                                <group>
+                                    <field name="user_ids" widget="many2many_tags"
+                                           attrs="{'required': [('is_enable', '=', True)]}"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                    <footer>
+                        <button string="Set Notification" class="oe_highlight"
+                                type="object" name="set_notification"/>
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_magento_notification_configuration" model="ir.actions.act_window">
+        <field name="name">Magento Scheduled Activity Configuration</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">magento.notification.ept</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

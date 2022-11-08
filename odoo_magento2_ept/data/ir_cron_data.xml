@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--This is used for process the Order queue data.-->
+    <record id="magento_ir_cron_parent_to_process_order_queue_data" model="ir.cron">
+        <field name="name">Magento: Process Order Queues</field>
+        <field name="model_id" ref="model_magento_order_data_queue_line_ept" />
+        <field name="state">code</field>
+        <field name="code">model.auto_import_order_queue_data()
+        </field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+    </record>
+
+    <!--This is used for process the product queue data "Parent Cron".-->
+    <record id="ir_cron_parent_to_process_product_queue_data" model="ir.cron">
+        <field name="name">Magento: Process Product Queues</field>
+        <field name="model_id" ref="model_sync_import_magento_product_queue_line" />
+        <field name="state">code</field>
+        <field name="code">model.auto_import_magento_product_queue_data()</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+    </record>
+
+    <!--This is used for process the Customer queue data.-->
+    <record id="magento_ir_cron_to_process_customer_queue_data" model="ir.cron">
+        <field name="name">Magento Customer Queue</field>
+        <field name="model_id" ref="model_magento_customer_data_queue_line_ept" />
+        <field name="state">code</field>
+        <field name="code">model.auto_process_customer_queues()</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+    </record>
+
+    <record id="magento_ir_cron_to_process_export_stock_queue_data" model="ir.cron">
+        <field name="name">Magento : Process Export Stock Queue</field>
+        <field name="model_id" ref="model_magento_export_stock_queue_line_ept" />
+        <field name="state">code</field>
+        <field name="code">model.auto_process_export_stock_queues()</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">15</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+    </record>
+
+</odoo>
