@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <!--Added below function to set the warehouse in the existing instance.-->
+        <function model="woo.instance.ept" name="get_warehouse_for_export_stock"/>
+    </data>
+</odoo>
