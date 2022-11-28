@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- PROFIT AND LOSS -->
+        <record id="magento_account_financial_report_profitandloss" model="account.financial.html.report">
+            <field name="name">Magento Profit and Loss</field>
+            <field name="analytic" eval="True"/>
+            <field name="unfold_all_filter" eval="True"/>
+            <field name="show_journal_filter" eval="True"/>
+            <field name="generated_menu_id" />
+            <field name='parent_id' ref='account.account_reports_legal_statements_menu'/>
+        </record>
+        <record id="magento_account_financial_report_net_profit" model="account.financial.html.report.line">
+            <field name="name">Net Profit</field>
+            <field name="code">MNEP</field>
+            <field name="financial_report_id" ref="magento_account_financial_report_profitandloss"/>
+            <!-- Use the expanded computation for clarity -->
+            <field name="formulas">MOPINC + MOIN - MCOS - MEXP - MDEP</field>
+            <field name="sequence" eval="3"/>
+            <field name="level" eval="0"/>
+        </record>
+
+        <record id="magento_account_financial_report_totalincome" model="account.financial.html.report.line">
+            <field name="name">Income</field>
+            <field name="code">MINC</field>
+            <field name="formulas">MOPINC + MOIN</field>
+            <field name="control_domain" eval="[('account_id.user_type_id.internal_group', '=', 'income')]"/>
+            <field name="parent_id" eval="False"/>
+            <field name="financial_report_id" ref="magento_account_financial_report_profitandloss"/>
+            <field name="sequence" eval="1"/>
+            <field name="level" eval="0"/>
+        </record>
+
+        <record id="magento_account_financial_report_gross_profit" model="account.financial.html.report.line">
+            <field name="name">Gross Profit</field>
+            <field name="code">MGRP</field>
+            <field name="formulas">MOPINC - MCOS</field>
+            <field name="parent_id" ref='magento_account_financial_report_totalincome'/>
+            <field name="sequence" eval="1"/>
+            <field name="level" eval="2"/>
+        </record>
+
+        <record id="magento_account_financial_report_income" model="account.financial.html.report.line">
+            <field name="name">Operating Income</field>
+            <field name="code">MOPINC</field>
+            <field name="formulas">-sum</field>
+            <field name="parent_id" ref='magento_account_financial_report_gross_profit'/>
+            <field name="domain" eval="[('account_id.user_type_id', '=', ref('account.data_account_type_revenue'))]"/>
+            <field name="groupby">account_id</field>
+            <field name="sequence" eval="1"/>
+            <field name="level" eval="3"/>
+        </record>
+
+        <record id="magento_account_financial_report_cost_sales" model="account.financial.html.report.line">
+            <field name="name">Cost of Revenue</field>
+            <field name="code">MCOS</field>
+            <field name="formulas">sum</field>
+            <field name="parent_id" ref='magento_account_financial_report_gross_profit'/>
+            <field name="domain"
+                   eval="[('account_id.user_type_id', '=', ref('account.data_account_type_direct_costs'))]"/>
+            <field name="groupby">account_id</field>
+            <field name="sequence" eval="3"/>
+            <field name="green_on_positive" eval="False"/>
+            <field name="level" eval="3"/>
+        </record>
+
+        <record id="magento_account_financial_report_other_income" model="account.financial.html.report.line">
+            <field name="name">Other Income</field>
+            <field name="code">MOIN</field>
+            <field name="formulas">-sum</field>
+            <field name="parent_id" ref='magento_account_financial_report_totalincome'/>
+            <field name="domain"
+                   eval="[('account_id.user_type_id', '=', ref('account.data_account_type_other_income'))]"/>
+            <field name="groupby">account_id</field>
+            <field name="sequence" eval="2"/>
+            <field name="level" eval="2"/>
+        </record>
+
+        <record id="magento_account_financial_report_less_expenses" model="account.financial.html.report.line">
+            <field name="name">Expenses</field>
+            <field name="code">MLEX</field>
+            <field name="formulas">MEXP + MDEP</field>
+            <field name="control_domain" eval="[('account_id.user_type_id.internal_group', '=', 'expense')]"/>
+            <field name="parent_id" eval="False"/>
+            <field name="sequence" eval="2"/>
+            <field name="financial_report_id" ref="magento_account_financial_report_profitandloss"/>
+            <field name="green_on_positive" eval="False"/>
+            <field name="level" eval="0"/>
+        </record>
+        <record id="magento_account_financial_report_expense" model="account.financial.html.report.line">
+            <field name="name">Expenses</field>
+            <field name="code">MEXP</field>
+            <field name="formulas">sum</field>
+            <field name="parent_id" ref='magento_account_financial_report_less_expenses'/>
+            <field name="domain" eval="[('account_id.user_type_id', '=', ref('account.data_account_type_expenses'))]"/>
+            <field name="groupby">account_id</field>
+            <field name="sequence" eval="1"/>
+            <field name="green_on_positive" eval="False"/>
+            <field name="level" eval="2"/>
+        </record>
+        <record id="magento_account_financial_report_depreciation" model="account.financial.html.report.line">
+            <field name="name">Depreciation</field>
+            <field name="code">MDEP</field>
+            <field name="formulas">sum</field>
+            <field name="parent_id" ref='magento_account_financial_report_less_expenses'/>
+            <field name="domain"
+                   eval="[('account_id.user_type_id', '=', ref('account.data_account_type_depreciation'))]"/>
+            <field name="groupby">account_id</field>
+            <field name="sequence" eval="2"/>
+            <field name="green_on_positive" eval="False"/>
+            <field name="level" eval="2"/>
+        </record>
+    </data>
+</odoo>

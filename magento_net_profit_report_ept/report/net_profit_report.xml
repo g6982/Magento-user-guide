@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <!--It is used to redirect action base on odoo version(community/enterprise)-->
+    <!-- Account Financial Report Actions -->
+    <record id="action_account_report_magento_pnl" model="ir.actions.client">
+        <field name="name">Profit And Loss</field>
+        <field name="tag">account_report</field>
+        <field name="context"
+               eval="{'model': 'account.financial.html.report', 'id': ref('magento_account_financial_report_profitandloss'),'magento_report':1}"/>
+    </record>
+
+    <menuitem action="action_account_report_magento_pnl" id="menu_magento_pnl_report" name="Net Profit"
+              parent="odoo_magento2_ept.menu_item_parent_sale_report_ept"
+              groups="analytic.group_analytic_accounting,analytic.group_analytic_tags" sequence="2"/>
+
+</odoo>
